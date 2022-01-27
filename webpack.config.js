@@ -9,6 +9,7 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
     filename: 'datepicker.min.js'
   },
+  plugins: [new MiniCssExtractPlugin()],
   watch: true,
   mode: 'development',
   module: {
@@ -29,7 +30,7 @@ module.exports = {
     minimizer: [new TerserPlugin()],
   },
   resolve: {
-    extensions: ['.js', '.ts', '.json'],
+    extensions: ['.js', '.ts', '.json', '.css'],
   },
   devtool: 'source-map',
 }
