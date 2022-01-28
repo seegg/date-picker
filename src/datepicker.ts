@@ -1,54 +1,56 @@
-import './style.css';
-
-const DatePicker = (): HTMLDivElement => {
-  let container = document.createElement('div');
-  container.classList.add('date-picker');
-  container.appendChild(weekLabels(['S', 'M', 'T', 'W', 'T', 'F', 'S']))
-  container.appendChild(month());
-  document.getElementById('date-picker')?.append(container);
-  return container;
+interface IDay {
+  date: number,
+  dayOfWeek: number,
+  month: number,
 }
 
-
-const day = (dow: string) => {
-  let day = document.createElement('div');
-  day.classList.add('day');
-  day.innerHTML = dow;
-  return day;
-}
-
-/**
- * 
- * @param labels Text symbols for days of the week.
- * @returns A HTMLDivElement containing displays for the days of the week.
- */
-const weekLabels = (labels: string[]) => {
-  let weekLabels = document.createElement('div');
-  weekLabels.classList.add('week');
-  for (let i = 0; i < labels.length; i++) {
-    let temp = day(labels[i]);
-    temp.classList.add('day-label');
-    weekLabels.appendChild(temp);
+class DatePicker {
+  month: number;
+  year: number;
+  daysInMonth: IDay[] = [];
+  constructor() {
+    const date = new Date();
+    this.month = date.getMonth();
+    this.year = date.getFullYear();
+    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
   }
-  return weekLabels;
-}
 
-const week = () => {
-  let week = document.createElement('div');
-  week.classList.add('week');
-  for (let i = 0; i < 7; i++) {
-    week.appendChild(day('0' + i.toString()));
+  static getDaysInMonth(year: number, month: number): IDay[] {
+    let currentDate = new Date(year, month, 1);
+    let days: IDay[] = [];
+    while (currentDate.getMonth() === month) {
+      days.push({ date: currentDate.getDate(), dayOfWeek: currentDate.getDay(), month });
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return days;
   }
-  return week;
-}
 
-const month = () => {
-  let month = document.createElement('div');
-  month.classList.add('month');
-  for (let i = 0; i < 5; i++) {
-    month.appendChild(week());
+  setYear(year: number) {
+    this.year = year;
+    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
   }
-  return month;
+
+  setMonth(month: number) {
+    this.month = month;
+    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+  }
+
 }
 
-DatePicker();
+
+class Day implements IDay {
+  date: number;
+  dayOfWeek: number;
+  month: number;
+  constructor(year: number, month: number, date: number) {
+    let tempDate = new Date(year, month, date);
+    this.date = tempDate.getDate();
+    this.dayOfWeek = tempDate.getDay();
+    this.month = tempDate.getMonth();
+  }
+}
+
+
+function getMonthElem() {
+
+}
