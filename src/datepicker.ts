@@ -1,4 +1,5 @@
-
+const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+const daysOfTheWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 
 interface IDay {
   date: number,
@@ -22,14 +23,14 @@ class DatePicker {
   isInMultiMonthSelectMode: boolean = false;
   pickerElem: HTMLDivElement;
   pickerElemContainer: HTMLDivElement;
-  setDateCallback: (start: IDay, end: IDay) => any;
+  setDateCallback: (start: Date, end: Date) => any;
   static baseID = 1;
   /**
    * 
    * @param date Date object
    * @param callback Callback to handle when a date range has been selected, has access to startDate and endDate properties.
    */
-  constructor(date: Date, callback: (start: IDay, end: IDay) => any) {
+  constructor(date: Date, callback: (start: Date, end: Date) => any) {
     this.id = DatePicker.baseID;
     DatePicker.baseID++;
     this.setDateCallback = callback;
@@ -115,7 +116,7 @@ class DatePicker {
     this._prevStart = this.startDate;
     this._prevEnd = this.endDate;
     this.highlightSelectedDateRange();
-    this.setDateCallback(this.startDate, this.endDate);
+    this.setDateCallback(this.startDate.toDate(), this.endDate.toDate());
   }
 
   setEndDateRange(index: number) {
@@ -132,7 +133,7 @@ class DatePicker {
 
     this.highlightSelectedDateRange();
     //call back to handle the date picker's output
-    this.setDateCallback(this.startDate, this.endDate);
+    this.setDateCallback(this.startDate.toDate(), this.endDate.toDate());
 
   }
 
@@ -251,7 +252,7 @@ const creatNavArrows = (icon: string, callback?: () => void) => {
  * @param names Names of the month
  * @returns Div Element for dispalying month name.
  */
-const createMonthElem = (datePicker: DatePicker, names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']) => {
+const createMonthElem = (datePicker: DatePicker, names = months) => {
   let monthDiv = document.createElement('div');
   monthDiv.id = 'picker-' + datePicker.id + '-month';
   monthDiv.classList.add('month');
@@ -273,7 +274,7 @@ const createYearElem = (datePicker: DatePicker) => {
 }
 
 
-const createWeekLabelElem = (weekLabel: string[] = ['S', 'M', 'T', 'W', 'T', 'F', 'S']) => {
+const createWeekLabelElem = (weekLabel: string[] = daysOfTheWeek) => {
   let weekLabelDiv = document.createElement('div');
   weekLabelDiv.classList.add('week', 'week-label');
   for (let i = 0; i < 7; i++) {
