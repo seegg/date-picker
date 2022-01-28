@@ -54,11 +54,17 @@
 
 .day-of-week-label{
   border-radius: 50%;
-  background: none;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1px;
+  user-select: none;
 }
 
 .day-of-week-sun{
-  background-color: hsl(0, 39%, 71%);
+  background-color: hsl(0, 50%, 71%);
 }
 
 .day-of-week-label:hover{

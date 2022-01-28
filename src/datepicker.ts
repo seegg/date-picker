@@ -280,7 +280,7 @@ const createWeekLabelElem = (weekLabel: string[] = daysOfTheWeek) => {
   for (let i = 0; i < 7; i++) {
     let dayOfWeek = document.createElement('div');
     dayOfWeek.innerHTML = weekLabel[i];
-    dayOfWeek.classList.add('day', 'day-of-week-label');
+    dayOfWeek.classList.add('day-of-week-label');
     if (i === 0) {
       dayOfWeek.classList.add('day-of-week-sun');
     }
