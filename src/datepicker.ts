@@ -72,6 +72,10 @@ export class DatePicker {
     return target.getTime() >= start.getTime() && target.getTime() <= end.getTime();
   }
 
+  /**
+   * Set the year value for the Date picker, redraws the layout.
+   * @param year 
+   */
   setYear(year: number) {
     this.year = year;
     const newDate = new Date(this.year, this.month, 1);
@@ -84,6 +88,10 @@ export class DatePicker {
     this.highlightSelectedDateRange();
   }
 
+  /**
+   * Set the month value for the Date picker, redraws the layout.
+   * @param month
+   */
   setMonth(month: number) {
     this.month = month;
     const newDate = new Date(this.year, this.month, 1);
@@ -109,7 +117,11 @@ export class DatePicker {
     this.triggerCallDateCallback();
   }
 
+  /**
+   * Decide if conditions for triggering the callback to send the date values is meet.
+   */
   triggerCallDateCallback() {
+    //Is not in select mode and start date is not null.
     if (!this.isInSelectMode && this.startDate) {
       if (this.startDate.toDate().getTime() !== this._prevStart?.toDate().getTime() ||
         this.endDate?.toDate().getTime() !== this._prevEnd?.toDate().getTime()) {
@@ -130,11 +142,13 @@ export class DatePicker {
    */
   setStartDateRange(index: number) {
     this.initialSelectedDate = this.daysInMonth[index];
+    if (this.sentSingDate) {
+    }
     this.startDate = this.initialSelectedDate;
     this.endDate = this.initialSelectedDate;
     this._prevStart = this.startDate;
     this._prevEnd = this.endDate;
-
+    this.sentSingDate = false;
     this.highlightSelectedDateRange();
   }
 
@@ -202,6 +216,21 @@ class Day implements IDay {
     this.month = tempDate.getMonth();
   }
 
+  /**
+   * Compare the time between two Day instances.
+   * @param dayOne Day instance one
+   * @param dayTwo Day instance two
+   * @returns -1 if dayOne is greater than dayTwo, 1 if dayTwo is greater, 0 if they are equal.
+   */
+  static CompareDays(dayOne: IDay, dayTwo: IDay) {
+    let dayOneTime = dayOne.toDate().getTime();
+    let dayTwoTime = dayTwo.toDate().getTime();
+    return dayOneTime > dayTwoTime ? -1 : dayTwoTime > dayOneTime ? 1 : 0;
+  }
+
+  /**
+   * @returns Date object representing the Day instance.
+   */
   toDate(): Date {
     return new Date(this.year, this.month, this.date);
   }

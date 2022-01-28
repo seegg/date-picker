@@ -2,6 +2,8 @@ import { DatePicker } from "./datepicker";
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const daysOfTheWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const arrowSymbols = ['<', '>'];
+
 
 /**
  * create the html layout for the date picker.
@@ -22,8 +24,8 @@ export const createDatePickerElem = (datePicker: DatePicker) => {
 
   let monthDiv = createMonthElem(datePicker);
   let yearDiv = createYearElem(datePicker);
-  let rightArrow = creatNavArrows('<', (datePicker.prevMonth.bind(datePicker)));
-  let leftArrow = creatNavArrows('>', datePicker.nextMonth.bind(datePicker));
+  let rightArrow = creatNavArrows(arrowSymbols[0], (datePicker.prevMonth.bind(datePicker)));
+  let leftArrow = creatNavArrows(arrowSymbols[1], datePicker.nextMonth.bind(datePicker));
   let daysOfWeekLabels = createWeekLabelElem();
   //add the header elements for the date picker in order.
   let navContainer = document.createElement('div');
@@ -37,6 +39,7 @@ export const createDatePickerElem = (datePicker: DatePicker) => {
   pickerElem.appendChild(daysOfWeekLabels);
 
   pickerElem.oncontextmenu = (e) => { e.preventDefault(); };
+  let daysContainer = document.createElement('div');
   for (let i = 0; i < 6; i++) {
     let weekElem = document.createElement('div');
     weekElem.classList.add('date-picker-week');
@@ -45,8 +48,9 @@ export const createDatePickerElem = (datePicker: DatePicker) => {
       let dayElem = createDayElem(datePicker, i * 7 + j);
       weekElem.appendChild(dayElem);
     }
-    pickerElem.appendChild(weekElem);
+    daysContainer.appendChild(weekElem);
   }
+  pickerElem.appendChild(daysContainer);
   return pickerElem;
 
 };
@@ -157,10 +161,11 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   dayEle.onpointerdown = (evt) => {
     if (evt.button === 2) return;
     datePicker.isInSelectMode = true;
+    datePicker.sentSingDate = false;
     datePicker.setStartDateRange(index)
   };
   //only select dates on pointer move event if picker is in select mode.
-  dayEle.onpointerenter = () => {
+  dayEle.onpointermove = () => {
     if (datePicker.isInSelectMode) {
       datePicker.setEndDateRange(index)
     }

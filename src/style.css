@@ -30,6 +30,7 @@
   background-color: hsl(34, 78%, 91%);
   border-radius: 3px;
   user-select: none;
+  outline: none;
 }
 .date-picker-month{
   width: 50px;
@@ -52,7 +53,8 @@
 }
 
 .date-picker-day:hover{
-  outline: solid 2px black;
+  /* outline: solid 2px hsl(0, 0%, 50%); */
+  box-shadow: 1px 1px 1px 1px black;
 }
 
 .date-picker-week{
@@ -96,7 +98,7 @@
 }
 
 .date-picker-navHeader{
-    height: 45px;
+    height: 40px;
     width: 100%;
     display: flex;
     justify-content: space-between;
