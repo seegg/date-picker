@@ -30,8 +30,16 @@ html {
   user-select: none;
 }
 
+.day-selected{
+  background-color: hsl(161, 51%, 50%);
+}
+
 .day:hover{
   background-color: hsl(34, 78%, 71%);
+}
+
+.day-selected:hover{
+  background-color: hsl(161, 78%, 50%);
 }
 
 .day-label{
@@ -47,4 +55,9 @@ html {
   margin: 2px;
   margin-left: 1px;
   margin-right: 1px;
+}
+
+.not-current-month{
+  color: lightgray;
+  background-color: hsl(0, 0%, 95%);
 }
