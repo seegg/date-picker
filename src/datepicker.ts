@@ -103,18 +103,36 @@ export class DatePicker {
     this.setMonth(this.month - 1);
   }
 
+  setSelectMode(isOn: boolean) {
+    this.isInSelectMode = isOn;
+    this.triggerCallDateCallback();
+  }
+
+  triggerCallDateCallback() {
+    if (!this.isInSelectMode && this.startDate) {
+      if (this.startDate.toDate().getTime() !== this._prevStart?.toDate().getTime() ||
+        this.endDate?.toDate().getTime() !== this._prevEnd?.toDate().getTime()) {
+        this.setDateCallback(this.startDate.toDate(), this.endDate!.toDate());
+        this._prevStart = this.startDate;
+        this._prevEnd = this.endDate;
+      } else if (this.startDate.toDate().getTime() === this.endDate?.toDate().getTime()) {
+        this.setDateCallback(this.startDate.toDate(), this.endDate!.toDate());
+      }
+    }
+  }
+
   /**
    * Set the initial values for initialSelectedDate startDate and endDate
    * @param index The index of the Day object for daysInMonth array.
    */
-  setStartDateRange(index: number, isSingleSelection: boolean = false) {
+  setStartDateRange(index: number) {
     this.initialSelectedDate = this.daysInMonth[index];
     this.startDate = this.initialSelectedDate;
     this.endDate = this.initialSelectedDate;
     this._prevStart = this.startDate;
     this._prevEnd = this.endDate;
+
     this.highlightSelectedDateRange();
-    this.setDateCallback(this.startDate.toDate(), this.endDate.toDate());
   }
 
   setEndDateRange(index: number) {
@@ -130,9 +148,6 @@ export class DatePicker {
     }
 
     this.highlightSelectedDateRange();
-    //call back to handle the date picker's output
-    this.setDateCallback(this.startDate.toDate(), this.endDate.toDate());
-
   }
 
   deselectDateRange() {

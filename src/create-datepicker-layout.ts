@@ -12,10 +12,10 @@ export const createDatePickerElem = (datePicker: DatePicker) => {
 
   let pickerElem = document.createElement('div');
   pickerElem.onpointerup = () => {
-    datePicker.isInSelectMode = false;
+    datePicker.setSelectMode(false);
   };
   pickerElem.onpointerleave = () => {
-    datePicker.isInSelectMode = false;
+    datePicker.setSelectMode(false);
   };
   pickerElem.classList.add('date-picker');
 
@@ -145,9 +145,10 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
       datePicker.setEndDateRange(index)
     }
   };
-  dayEle.onpointerup = () => {
-    datePicker.isInSelectMode = false;
+  dayEle.onpointerup = (evt) => {
+    evt.stopPropagation();
     datePicker.setEndDateRange(index)
+    datePicker.setSelectMode(false);
   };
   if (date.month !== datePicker.month) dayEle.classList.add('not-current-month');
   let dateNumElem = document.createElement('p');
