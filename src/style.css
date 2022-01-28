@@ -1,4 +1,4 @@
-html {
+/* html {
   box-sizing: border-box;
   background-color: var(--bg-colour);
   font-family: 'Open Sans', sans-serif;
@@ -6,7 +6,7 @@ html {
 }
 *, *:before, *:after {
   box-sizing: inherit;
-}
+} */
 
 .date-picker{
   width: fit-content;
@@ -31,7 +31,7 @@ html {
 }
 
 .day:hover{
-  background-color: hsl(34, 78%, 71%);
+  outline: solid 2px black;
 }
 
 .day-label{
@@ -59,7 +59,7 @@ html {
 }
 
 .day-selected:hover{
-  background-color: hsl(161, 78%, 50%);
+  background-color: hsl(161, 51%, 50%);
 }
 
 .navHeader{

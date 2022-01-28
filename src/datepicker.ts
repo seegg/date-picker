@@ -10,13 +10,21 @@ class DatePicker {
   month: number;
   year: number;
   daysInMonth: IDay[] = [];
+  initialSelectedDate: IDay | null = null;
   startDate: IDay | null = null;
   endDate: IDay | null = null;
-
+  isInSelectMode: boolean = false;
+  isInMultiMonthSelectMode: boolean = false;
   pickerElem: HTMLDivElement;
+  setDateCallback: (start: IDay, end: IDay) => any;
 
-  constructor() {
-    const date = new Date();
+  /**
+   * 
+   * @param date Date object
+   * @param callback Callback to handle when a date range has been selected, has access to startDate and endDate properties.
+   */
+  constructor(date: Date, callback: (start: IDay, end: IDay) => any) {
+    this.setDateCallback = callback;
     this.month = date.getMonth();
     this.year = date.getFullYear();
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
@@ -63,21 +71,24 @@ class DatePicker {
   }
 
   setStartDateRange(index: number) {
-    this.startDate = this.daysInMonth[index];
-    this.endDate = this.startDate;
-    console.log(index);
+    console.log(this.daysInMonth[index].date)
+    this.initialSelectedDate = this.daysInMonth[index];
+    this.startDate = this.initialSelectedDate;
+    this.endDate = this.initialSelectedDate;
   }
 
   setEndDateRange(index: number) {
-    if (!this.startDate) return;
+    if (!this.initialSelectedDate) return;
     this.endDate = this.daysInMonth[index];
-    if (this.endDate.toDate().getTime() < this.startDate.toDate().getTime()) {
-      let temp = this.startDate;
+    console.log(this.endDate.date);
+    if (this.endDate.toDate().getTime() < this.initialSelectedDate.toDate().getTime()) {
       this.startDate = this.endDate;
-      this.endDate = temp;
+      this.endDate = this.initialSelectedDate;
+    } else {
+      this.startDate = this.initialSelectedDate;
     }
-
     this.highlightSelectedDateRange();
+    this.setDateCallback(this.startDate, this.endDate);
 
   }
 
@@ -136,7 +147,11 @@ class Day implements IDay {
   }
 }
 
-
+/**
+ * create the html layout for the date picker.
+ * @param datePicker current date picker instance
+ * @returns HTMLDivElement layout for current date picker.
+ */
 const createDatePickerElem = (datePicker: DatePicker) => {
 
   let pickerElem = document.createElement('div');
@@ -151,7 +166,7 @@ const createDatePickerElem = (datePicker: DatePicker) => {
   navContainer.appendChild(leftArrow);
 
   pickerElem.appendChild(navContainer);
-
+  pickerElem.oncontextmenu = (e) => { e.preventDefault(); };
   for (let i = 0; i < 6; i++) {
     let weekElem = document.createElement('div');
     weekElem.classList.add('week');
@@ -173,6 +188,19 @@ const creatNavArrows = (icon: string, callback: () => void) => {
   return arrow;
 }
 
+const createYearElem = (year: number) => {
+  let yearDiv = document.createElement('div');
+  yearDiv.innerHTML = year.toString();
+}
+
+const createMonthElem = (month: number) => {
+
+}
+
+const createWeekLabelElem = (weekLabel: string[]) => {
+
+}
+
 /**
  * Create the element for Day object.
  * @param datePicker current datePicker instance.
@@ -183,11 +211,20 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   let dayEle = document.createElement('div');
   const date = datePicker.daysInMonth[index];
   dayEle.classList.add('day');
-  dayEle.onpointerdown = () => {
+  dayEle.onpointerdown = (evt) => {
+    if (evt.button === 2) return;
+    datePicker.isInSelectMode = true;
     datePicker.setStartDateRange(index)
   };
-  dayEle.onpointermove;
+  //only select dates on pointer move event if picker is in select mode.
+  dayEle.onpointerenter = () => {
+    if (datePicker.isInSelectMode) {
+      datePicker.setEndDateRange(index)
+      console.log(datePicker.isInSelectMode);
+    }
+  };
   dayEle.onpointerup = () => {
+    datePicker.isInSelectMode = false;
     datePicker.setEndDateRange(index)
   };
   if (date.month !== datePicker.month) dayEle.classList.add('not-current-month');
@@ -197,7 +234,7 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   return dayEle;
 };
 
-let picker = new DatePicker();
+let picker = new DatePicker(new Date(), (start, end) => { });
 
 const container = document.getElementById('date-picker');
 container?.appendChild(picker.pickerElem);
