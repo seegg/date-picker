@@ -77,9 +77,24 @@ class DatePicker {
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
   }
 
-  setMonth(month: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11) {
+  setMonth(month: number) {
     this.month = month;
+    const newDate = new Date(this.year, this.month, 1);
+    this.month = newDate.getMonth();
+    this.year = newDate.getFullYear();
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+    const newPickerElem = createDatePickerElem(this);
+    this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
+    this.pickerElem = newPickerElem;
+    this.highlightSelectedDateRange();
+  }
+
+  nextMonth() {
+    this.setMonth(this.month + 1);
+  }
+
+  prevMonth() {
+    this.setMonth(this.month - 1);
   }
 
   /**
@@ -186,8 +201,8 @@ const createDatePickerElem = (datePicker: DatePicker) => {
 
   let monthDiv = createMonthElem(datePicker);
   let yearDiv = createYearElem(datePicker);
-  let rightArrow = creatNavArrows('<', () => { });
-  let leftArrow = creatNavArrows('>', () => { });
+  let rightArrow = creatNavArrows('<', (datePicker.prevMonth.bind(datePicker)));
+  let leftArrow = creatNavArrows('>', datePicker.nextMonth.bind(datePicker));
 
   //add the header elements for the date picker in order.
   let navContainer = document.createElement('div');
