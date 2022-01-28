@@ -9,6 +9,7 @@
   background-color: var(--bg-colour);
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
+  user-select: none;
 }
 
 .day{
@@ -70,6 +71,7 @@
   border-radius: 2px;
   justify-content: center;
   align-items: center;
+  user-select: none;
 }
 
 .navArrow:hover{

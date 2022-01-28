@@ -70,9 +70,18 @@ class DatePicker {
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
   }
 
-  setMonth(month: number) {
+  setMonth(month: 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11) {
     this.month = month;
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+  }
+
+  test() {
+    console.log(this);
+    let parendElem = this.pickerElem.parentElement;
+    let newElem = createDatePickerElem(this);
+    parendElem?.replaceChild(newElem, this.pickerElem);
+    // this.highlightSelectedDateRange();
+
   }
 
   /**
@@ -111,7 +120,7 @@ class DatePicker {
   }
 
   setEndDateRange(index: number) {
-    if (!this.initialSelectedDate) return;
+    if (!this.initialSelectedDate || !this.isInSelectMode) return;
     this.endDate = this.daysInMonth[index];
     //if the endate is before the initial date set the startdate back to the end date
     //and the end date to the initial date.
@@ -190,11 +199,17 @@ class Day implements IDay {
 const createDatePickerElem = (datePicker: DatePicker) => {
 
   let pickerElem = document.createElement('div');
+  pickerElem.onpointerup = () => {
+    datePicker.isInSelectMode = false;
+  };
+  pickerElem.onpointerleave = () => {
+    datePicker.isInSelectMode = false;
+  };
   pickerElem.classList.add('date-picker');
 
   let monthDiv = createMonthElem(datePicker);
   let yearDiv = createYearElem(datePicker);
-  let rightArrow = creatNavArrows('<', () => { });
+  let rightArrow = creatNavArrows('<', datePicker.test.bind(datePicker));
   let leftArrow = creatNavArrows('>', () => { });
 
   //add the header elements for the date picker in order.
@@ -225,6 +240,7 @@ const creatNavArrows = (icon: string, callback: () => void) => {
   let arrow = document.createElement('div');
   arrow.classList.add('navArrow');
   arrow.innerHTML = icon;
+  arrow.onclick = () => { callback() };
   return arrow;
 }
 
@@ -255,6 +271,7 @@ const createYearElem = (datePicker: DatePicker) => {
   return yearDiv
 }
 
+
 const createWeekLabelElem = (weekLabel: string[] = ['S', 'M', 'T', 'W', 'T', 'F', 'S']) => {
 
 }
@@ -274,7 +291,9 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
     datePicker.setSingleDateRange(index);
   }
 
-  dayEle.oncontextmenu = () => { };
+  dayEle.oncontextmenu = () => {
+    // datePicker.test();
+  };
 
   dayEle.onpointerdown = (evt) => {
     if (evt.button === 2) return;
