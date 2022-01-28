@@ -81,7 +81,13 @@ class DatePicker {
 
   }
 
+  /**
+   * if the new selected range is a single date and the old range is also a single date
+   * and if both are the same then set the start and end dates to null;
+   */
+  deSelecteDateRange() {
 
+  }
 
   /**
    * toggle classes for .day elements to highlight those
