@@ -214,7 +214,7 @@ const createDatePickerElem = (datePicker: DatePicker) => {
   let daysOfWeekLabels = createWeekLabelElem();
   //add the header elements for the date picker in order.
   let navContainer = document.createElement('div');
-  navContainer.classList.add('navHeader');
+  navContainer.classList.add('date-picker-navHeader');
   navContainer.appendChild(rightArrow);
   navContainer.appendChild(monthDiv);
   navContainer.appendChild(yearDiv);
@@ -240,7 +240,7 @@ const createDatePickerElem = (datePicker: DatePicker) => {
 
 const creatNavArrows = (icon: string, callback?: () => void) => {
   let arrow = document.createElement('div');
-  arrow.classList.add('navArrow');
+  arrow.classList.add('date-picker-navArrow');
   arrow.innerHTML = icon;
   arrow.onclick = () => { callback ? callback() : '' };
   return arrow;

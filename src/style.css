@@ -76,7 +76,7 @@
   background-color: hsl(161, 51%, 50%);
 }
 
-.navHeader{
+.date-picker-navHeader{
     height: 45px;
     width: 100%;
     display: flex;
@@ -84,7 +84,7 @@
     align-items: center;
 }
 
-.navArrow{
+.date-picker-navArrow{
   width: 35px;
   height: 35px;
   display: flex;
@@ -94,6 +94,6 @@
   user-select: none;
 }
 
-.navArrow:hover{
+.date-picker-navArrow:hover{
   outline: solid 2px black;
 }
