@@ -74,7 +74,14 @@ class DatePicker {
 
   setYear(year: number) {
     this.year = year;
+    const newDate = new Date(this.year, this.month, 1);
+    this.month = newDate.getMonth();
+    this.year = newDate.getFullYear();
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+    const newPickerElem = createDatePickerElem(this);
+    this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
+    this.pickerElem = newPickerElem;
+    this.highlightSelectedDateRange();
   }
 
   setMonth(month: number) {
@@ -102,13 +109,13 @@ class DatePicker {
    * @param index The index of the Day object for daysInMonth array.
    */
   setStartDateRange(index: number, isSingleSelection: boolean = false) {
-    console.log('start');
-
     this.initialSelectedDate = this.daysInMonth[index];
     this.startDate = this.initialSelectedDate;
     this.endDate = this.initialSelectedDate;
-
+    this._prevStart = this.startDate;
+    this._prevEnd = this.endDate;
     this.highlightSelectedDateRange();
+    this.setDateCallback(this.startDate, this.endDate);
   }
 
   setEndDateRange(index: number) {
@@ -203,7 +210,7 @@ const createDatePickerElem = (datePicker: DatePicker) => {
   let yearDiv = createYearElem(datePicker);
   let rightArrow = creatNavArrows('<', (datePicker.prevMonth.bind(datePicker)));
   let leftArrow = creatNavArrows('>', datePicker.nextMonth.bind(datePicker));
-
+  let daysOfWeekLabels = createWeekLabelElem();
   //add the header elements for the date picker in order.
   let navContainer = document.createElement('div');
   navContainer.classList.add('navHeader');
@@ -211,8 +218,10 @@ const createDatePickerElem = (datePicker: DatePicker) => {
   navContainer.appendChild(monthDiv);
   navContainer.appendChild(yearDiv);
   navContainer.appendChild(leftArrow);
-
   pickerElem.appendChild(navContainer);
+
+  pickerElem.appendChild(daysOfWeekLabels);
+
   pickerElem.oncontextmenu = (e) => { e.preventDefault(); };
   for (let i = 0; i < 6; i++) {
     let weekElem = document.createElement('div');
@@ -265,7 +274,18 @@ const createYearElem = (datePicker: DatePicker) => {
 
 
 const createWeekLabelElem = (weekLabel: string[] = ['S', 'M', 'T', 'W', 'T', 'F', 'S']) => {
-
+  let weekLabelDiv = document.createElement('div');
+  weekLabelDiv.classList.add('week', 'week-label');
+  for (let i = 0; i < 7; i++) {
+    let dayOfWeek = document.createElement('div');
+    dayOfWeek.innerHTML = weekLabel[i];
+    dayOfWeek.classList.add('day', 'day-of-week-label');
+    if (i === 0) {
+      dayOfWeek.classList.add('day-of-week-sun');
+    }
+    weekLabelDiv.appendChild(dayOfWeek);
+  }
+  return weekLabelDiv;
 }
 
 /**
@@ -309,7 +329,7 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   return dayEle;
 };
 
-let picker = new DatePicker(new Date(), (start, end) => { });
+let picker = new DatePicker(new Date(), (start, end) => { console.log(start, end) });
 
 const container = document.getElementById('date-picker');
-container?.appendChild(picker.pickerElemContainer);
+container?.appendChild(picker.pickerElemContainer); 

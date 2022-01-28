@@ -17,6 +17,10 @@
   border-radius: 5px;
 }
 
+.date-picker-long-select{
+  outline: solid 1px hsl(120, 50%, 45%);
+}
+
 .day{
   width: 35px;
   height: 35px;
@@ -46,6 +50,19 @@
   margin: 1px;
   margin-left: 1px;
   margin-right: 1px;
+}
+
+.day-of-week-label{
+  border-radius: 50%;
+  background: none;
+}
+
+.day-of-week-sun{
+  background-color: hsl(0, 39%, 71%);
+}
+
+.day-of-week-label:hover{
+  outline: none;
 }
 
 .not-current-month{
