@@ -3,8 +3,7 @@
   height: fit-content;
   border-radius: 5px;
   box-shadow: 0px 5px 5px black ;
-  padding: 5px;
-  padding-top: 2px;
+  padding-bottom: 5px;
   box-sizing: border-box;
   background-color: var(--bg-colour);
   font-family: 'Open Sans', sans-serif;
@@ -65,6 +64,7 @@
 
 .day-of-week-label{
   border-radius: 50%;
+  font-size: 1rem;
   width: 35px;
   height: 35px;
   display: flex;
@@ -101,6 +101,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: hsl(160, 40%, 85%);
 }
 
 .date-picker-navArrow{
@@ -123,9 +124,39 @@
   width: 100px;
   height: 100px;
   left: 50%;
+  top: 30px;
   transform: translateX(-50%);
   position: absolute;
-  display: block;
+  display: none;
+  flex-direction: column;
+  align-items: center;
   background-color: bisque;
-  opacity: 0.5;
+  border-radius: 3px;
+  box-shadow: 2px 2px 5px 2px hsl(0, 0%, 30%);
+  overflow: auto;
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.date-picker-month-select-show{
+  display: flex;
+}
+
+.date-picker-month-select-name{
+    min-height: 35px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: hsl(0, 0%, 100%);
+    box-sizing: border-box;
+}
+
+.date-picker-month-name-alt{
+  background-color: hsl(0, 0%, 100%);
+}
+
+
+.date-picker-month-select-selected{
+  background-color: hsl(56, 38%, 78%);
 }

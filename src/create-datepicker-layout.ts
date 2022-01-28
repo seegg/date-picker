@@ -11,6 +11,7 @@ const daysOfTheWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 export const createDatePickerElem = (datePicker: DatePicker) => {
 
   let pickerElem = document.createElement('div');
+  //event handlers dealing for toggling select mode to false
   pickerElem.onpointerup = () => {
     datePicker.setSelectMode(false);
   };
@@ -66,10 +67,16 @@ const creatNavArrows = (icon: string, callback?: () => void) => {
  */
 const createMonthElem = (datePicker: DatePicker, names = months) => {
   let monthDiv = document.createElement('div');
-
+  let monthSelect = createMonthSelecElem(datePicker, names);
   monthDiv.id = 'picker-' + datePicker.id + '-month';
   monthDiv.classList.add('date-picker-month');
   monthDiv.innerHTML = names[datePicker.month];
+  monthDiv.appendChild(monthSelect);
+
+  monthDiv.onclick = () => {
+    monthSelect.classList.add('date-picker-month-select-show');
+    monthSelect.focus();
+  }
   return monthDiv;
 }
 
@@ -82,6 +89,19 @@ const createMonthElem = (datePicker: DatePicker, names = months) => {
 const createMonthSelecElem = (datePicker: DatePicker, names = months) => {
   let monthSelect = document.createElement('div');
   monthSelect.classList.add('date-picker-month-select');
+  monthSelect.tabIndex = 0;
+  names.forEach((month, idx) => {
+    let nameDiv = document.createElement('div');
+    nameDiv.classList.add('date-picker-month-select-name');
+    if (idx % 2 !== 0) nameDiv.classList.add('date-picker-month-name-alt');
+    if (idx === datePicker.month) nameDiv.classList.add('date-picker-month-select-selected')
+    nameDiv.innerHTML = month;
+    nameDiv.onclick = () => { datePicker.setMonth(idx) };
+    monthSelect.appendChild(nameDiv);
+  })
+  monthSelect.onblur = () => {
+    monthSelect.classList.remove('date-picker-month-select-show');
+  }
 
   return monthSelect;
 }

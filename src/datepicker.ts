@@ -22,6 +22,7 @@ export class DatePicker {
   pickerElem: HTMLDivElement;
   pickerElemContainer: HTMLDivElement;
   setDateCallback: (start: Date, end: Date) => any;
+  sentSingDate: boolean = false;
   static baseID = 1;
   /**
    * 
@@ -115,8 +116,10 @@ export class DatePicker {
         this.setDateCallback(this.startDate.toDate(), this.endDate!.toDate());
         this._prevStart = this.startDate;
         this._prevEnd = this.endDate;
-      } else if (this.startDate.toDate().getTime() === this.endDate?.toDate().getTime()) {
+        this.sentSingDate = false;
+      } else if (this.startDate.toDate().getTime() === this.endDate?.toDate().getTime() && !this.sentSingDate) {
         this.setDateCallback(this.startDate.toDate(), this.endDate!.toDate());
+        this.sentSingDate = true;
       }
     }
   }
