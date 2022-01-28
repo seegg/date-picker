@@ -7,6 +7,7 @@ interface IDay {
 }
 
 class DatePicker {
+  id: number;
   month: number;
   year: number;
   daysInMonth: IDay[] = [];
@@ -17,13 +18,15 @@ class DatePicker {
   isInMultiMonthSelectMode: boolean = false;
   pickerElem: HTMLDivElement;
   setDateCallback: (start: IDay, end: IDay) => any;
-
+  static baseID = 1;
   /**
    * 
    * @param date Date object
    * @param callback Callback to handle when a date range has been selected, has access to startDate and endDate properties.
    */
   constructor(date: Date, callback: (start: IDay, end: IDay) => any) {
+    this.id = DatePicker.baseID;
+    DatePicker.baseID++;
     this.setDateCallback = callback;
     this.month = date.getMonth();
     this.year = date.getFullYear();
@@ -71,7 +74,6 @@ class DatePicker {
   }
 
   setStartDateRange(index: number) {
-    console.log(this.daysInMonth[index].date)
     this.initialSelectedDate = this.daysInMonth[index];
     this.startDate = this.initialSelectedDate;
     this.endDate = this.initialSelectedDate;
@@ -80,7 +82,8 @@ class DatePicker {
   setEndDateRange(index: number) {
     if (!this.initialSelectedDate) return;
     this.endDate = this.daysInMonth[index];
-    console.log(this.endDate.date);
+    //if the endate is before the initial date set the startdate back to the end date
+    //and the end date to the initial date.
     if (this.endDate.toDate().getTime() < this.initialSelectedDate.toDate().getTime()) {
       this.startDate = this.endDate;
       this.endDate = this.initialSelectedDate;
@@ -88,6 +91,7 @@ class DatePicker {
       this.startDate = this.initialSelectedDate;
     }
     this.highlightSelectedDateRange();
+    //call back to handle the date picker's output
     this.setDateCallback(this.startDate, this.endDate);
 
   }
@@ -220,7 +224,6 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   dayEle.onpointerenter = () => {
     if (datePicker.isInSelectMode) {
       datePicker.setEndDateRange(index)
-      console.log(datePicker.isInSelectMode);
     }
   };
   dayEle.onpointerup = () => {
