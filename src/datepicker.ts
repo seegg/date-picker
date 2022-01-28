@@ -9,6 +9,8 @@ class DatePicker {
   month: number;
   year: number;
   daysInMonth: IDay[] = [];
+  startDate: IDay | null = null;
+  endDate: IDay | null = null;
   constructor() {
     const date = new Date();
     this.month = date.getMonth();
@@ -44,12 +46,12 @@ class DatePicker {
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
   }
 
-  selectDate() {
-
+  selectDateStart(index: number) {
+    console.log(index);
   }
 
-  selectDateRange() {
-
+  selectDateEnd(index: number) {
+    console.log(index);
   }
 }
 
@@ -77,37 +79,44 @@ const createDatePickerElem = () => {
   let pickerElem = document.createElement('div');
   pickerElem.classList.add('date-picker');
 
-  //create element and layout for the weeks in the month
+
   for (let i = 0; i < 6; i++) {
-    let week = document.createElement('div');
-    week.classList.add('week');
+    let weekElem = document.createElement('div');
+    weekElem.classList.add('week');
+
     for (let j = 0; j < 7; j++) {
-      let day = document.createElement('div');
-      let dayNum = document.createElement('p');
-      let date = datePicker.daysInMonth[i * 7 + j];
-      day.classList.add('day');
-      day.onpointerdown = (ev) => {
-        (ev.currentTarget as HTMLDivElement).classList.toggle('day-selected');
-      }
-      if (date.month !== datePicker.month) day.classList.add('not-current-month');
-      dayNum.innerHTML = date.date.toString();
-      day.appendChild(dayNum);
-      week.appendChild(day);
+      let dayElem = createDayElem(datePicker, i * 7 + j);
+      weekElem.appendChild(dayElem);
     }
-    pickerElem.appendChild(week);
+    pickerElem.appendChild(weekElem);
   }
 
   container?.appendChild(pickerElem);
 
 };
 
+/**
+ * Create the element for Day object.
+ * @param datePicker current datePicker instance.
+ * @param index index number of daysInMonth property from datePicker instance.
+ * @returns HTMLDivElement for the selected date.
+ */
 const createDayElem = (datePicker: DatePicker, index: number) => {
   let dayEle = document.createElement('div');
+  const date = datePicker.daysInMonth[index];
   dayEle.classList.add('day');
-  dayEle.onclick = (ev: MouseEvent) => {
-    (ev.currentTarget as HTMLDivElement).classList
+  dayEle.onpointerdown = () => {
+    datePicker.selectDateStart(index)
   };
-
+  dayEle.onpointermove;
+  dayEle.onpointerup = () => {
+    datePicker.selectDateEnd(index)
+  };
+  if (date.month !== datePicker.month) dayEle.classList.add('not-current-month');
+  let dateNumElem = document.createElement('p');
+  dateNumElem.innerHTML = date.date.toString();
+  dayEle.appendChild(dateNumElem);
+  return dayEle;
 };
 
 createDatePickerElem();
