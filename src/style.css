@@ -1,13 +1,3 @@
-/* html {
-  box-sizing: border-box;
-  background-color: var(--bg-colour);
-  font-family: 'Open Sans', sans-serif;
-  font-weight: 600;
-}
-*, *:before, *:after {
-  box-sizing: inherit;
-} */
-
 .date-picker{
   width: fit-content;
   height: fit-content;
@@ -77,6 +67,11 @@
   width: 35px;
   height: 35px;
   display: flex;
+  border-radius: 2px;
   justify-content: center;
   align-items: center;
+}
+
+.navArrow:hover{
+  outline: solid 2px black;
 }

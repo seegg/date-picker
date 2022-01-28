@@ -1,3 +1,5 @@
+
+
 interface IDay {
   date: number,
   dayOfWeek: number,
@@ -73,10 +75,39 @@ class DatePicker {
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
   }
 
-  setStartDateRange(index: number) {
+  /**
+   * Select a single date as the start and end date. If it's the same as the 
+   * existing dates, reset start and endate to null.
+   * @param index The index of the Day object for daysInMonth array.
+   */
+  setSingleDateRange(index: number) {
+    let temp = this.daysInMonth[index];
+    console.log('single');
+    //if the date range is only a single date and it's the same as the new selected date
+    //reset the startDate and endDate to null.
+    if (this.startDate?.toDate().getTime() === temp.toDate().getTime()
+      && this.endDate?.toDate().getTime() === temp.toDate().getTime()) {
+      console.log(temp, this.endDate);
+      this.startDate = null;
+      this.endDate = null;
+    } else {
+      this.startDate = temp;
+      this.endDate = temp;
+    }
+    this.highlightSelectedDateRange();
+  }
+
+  /**
+   * Set the initial values for initialSelectedDate startDate and endDate
+   * @param index The index of the Day object for daysInMonth array.
+   */
+  setStartDateRange(index: number, isSingleSelection: boolean = false) {
+    console.log('start');
     this.initialSelectedDate = this.daysInMonth[index];
     this.startDate = this.initialSelectedDate;
     this.endDate = this.initialSelectedDate;
+
+    this.highlightSelectedDateRange();
   }
 
   setEndDateRange(index: number) {
@@ -161,12 +192,17 @@ const createDatePickerElem = (datePicker: DatePicker) => {
   let pickerElem = document.createElement('div');
   pickerElem.classList.add('date-picker');
 
+  let monthDiv = createMonthElem(datePicker);
+  let yearDiv = createYearElem(datePicker);
   let rightArrow = creatNavArrows('<', () => { });
   let leftArrow = creatNavArrows('>', () => { });
 
+  //add the header elements for the date picker in order.
   let navContainer = document.createElement('div');
   navContainer.classList.add('navHeader');
   navContainer.appendChild(rightArrow);
+  navContainer.appendChild(monthDiv);
+  navContainer.appendChild(yearDiv);
   navContainer.appendChild(leftArrow);
 
   pickerElem.appendChild(navContainer);
@@ -192,16 +228,34 @@ const creatNavArrows = (icon: string, callback: () => void) => {
   return arrow;
 }
 
-const createYearElem = (year: number) => {
+/**
+ * Create the element to display the month's name.
+ * @param datePicker Current instance of DatePicker
+ * @param names Names of the month
+ * @returns Div Element for dispalying month name.
+ */
+const createMonthElem = (datePicker: DatePicker, names = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']) => {
+  let monthDiv = document.createElement('div');
+  monthDiv.id = 'picker-' + datePicker.id + '-month';
+  monthDiv.classList.add('month');
+  monthDiv.innerHTML = names[datePicker.month];
+  return monthDiv;
+}
+
+/**
+ * Create div element to display select year.
+ * @param datePicker Current instance of DatePicker
+ * @returns Div Element for displaying selected year.
+ */
+const createYearElem = (datePicker: DatePicker) => {
   let yearDiv = document.createElement('div');
-  yearDiv.innerHTML = year.toString();
+  yearDiv.id = 'picker-' + datePicker.id + '-year';
+  yearDiv.classList.add('year');
+  yearDiv.innerHTML = datePicker.year.toString();
+  return yearDiv
 }
 
-const createMonthElem = (month: number) => {
-
-}
-
-const createWeekLabelElem = (weekLabel: string[]) => {
+const createWeekLabelElem = (weekLabel: string[] = ['S', 'M', 'T', 'W', 'T', 'F', 'S']) => {
 
 }
 
@@ -215,6 +269,13 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   let dayEle = document.createElement('div');
   const date = datePicker.daysInMonth[index];
   dayEle.classList.add('day');
+
+  dayEle.onclick = () => {
+    datePicker.setSingleDateRange(index);
+  }
+
+  dayEle.oncontextmenu = () => { };
+
   dayEle.onpointerdown = (evt) => {
     if (evt.button === 2) return;
     datePicker.isInSelectMode = true;
