@@ -37,15 +37,7 @@
   outline: solid 2px black;
 }
 
-.day-label{
- background: none;
-}
-
-.day-label:hover{
-  background: none;
-}
-
-.week{
+.date-picker-week{
   display: flex;
   margin: 1px;
   margin-left: 1px;

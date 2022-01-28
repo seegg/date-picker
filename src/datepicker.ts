@@ -226,7 +226,7 @@ const createDatePickerElem = (datePicker: DatePicker) => {
   pickerElem.oncontextmenu = (e) => { e.preventDefault(); };
   for (let i = 0; i < 6; i++) {
     let weekElem = document.createElement('div');
-    weekElem.classList.add('week');
+    weekElem.classList.add('date-picker-week');
 
     for (let j = 0; j < 7; j++) {
       let dayElem = createDayElem(datePicker, i * 7 + j);
@@ -276,7 +276,7 @@ const createYearElem = (datePicker: DatePicker) => {
 
 const createWeekLabelElem = (weekLabel: string[] = daysOfTheWeek) => {
   let weekLabelDiv = document.createElement('div');
-  weekLabelDiv.classList.add('week', 'week-label');
+  weekLabelDiv.classList.add('date-picker-week', 'week-label');
   for (let i = 0; i < 7; i++) {
     let dayOfWeek = document.createElement('div');
     dayOfWeek.innerHTML = weekLabel[i];
