@@ -11,6 +11,11 @@
   font-weight: 600;
   user-select: none;
 }
+.date-picker-container{
+  width: fit-content;
+  height: fit-content;
+  border-radius: 5px;
+}
 
 .day{
   width: 35px;
@@ -18,7 +23,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 2px;
+  margin: 1px;
   background-color: antiquewhite;
   border-radius: 3px;
   user-select: none;
@@ -38,7 +43,7 @@
 
 .week{
   display: flex;
-  margin: 2px;
+  margin: 1px;
   margin-left: 1px;
   margin-right: 1px;
 }

@@ -16,9 +16,12 @@ class DatePicker {
   initialSelectedDate: IDay | null = null;
   startDate: IDay | null = null;
   endDate: IDay | null = null;
+  _prevStart: IDay | null = null;
+  _prevEnd: IDay | null = null;
   isInSelectMode: boolean = false;
   isInMultiMonthSelectMode: boolean = false;
   pickerElem: HTMLDivElement;
+  pickerElemContainer: HTMLDivElement;
   setDateCallback: (start: IDay, end: IDay) => any;
   static baseID = 1;
   /**
@@ -34,6 +37,10 @@ class DatePicker {
     this.year = date.getFullYear();
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
     this.pickerElem = createDatePickerElem(this);
+    this.pickerElemContainer = document.createElement('div');
+    this.pickerElemContainer.id = 'date-picker-container-' + this.id;
+    this.pickerElemContainer.classList.add('date-picker-container');
+    this.pickerElemContainer.appendChild(this.pickerElem);
   }
 
   /**
@@ -75,43 +82,13 @@ class DatePicker {
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
   }
 
-  test() {
-    console.log(this);
-    let parendElem = this.pickerElem.parentElement;
-    let newElem = createDatePickerElem(this);
-    parendElem?.replaceChild(newElem, this.pickerElem);
-    // this.highlightSelectedDateRange();
-
-  }
-
-  /**
-   * Select a single date as the start and end date. If it's the same as the 
-   * existing dates, reset start and endate to null.
-   * @param index The index of the Day object for daysInMonth array.
-   */
-  setSingleDateRange(index: number) {
-    let temp = this.daysInMonth[index];
-    console.log('single');
-    //if the date range is only a single date and it's the same as the new selected date
-    //reset the startDate and endDate to null.
-    if (this.startDate?.toDate().getTime() === temp.toDate().getTime()
-      && this.endDate?.toDate().getTime() === temp.toDate().getTime()) {
-      console.log(temp, this.endDate);
-      this.startDate = null;
-      this.endDate = null;
-    } else {
-      this.startDate = temp;
-      this.endDate = temp;
-    }
-    this.highlightSelectedDateRange();
-  }
-
   /**
    * Set the initial values for initialSelectedDate startDate and endDate
    * @param index The index of the Day object for daysInMonth array.
    */
   setStartDateRange(index: number, isSingleSelection: boolean = false) {
     console.log('start');
+
     this.initialSelectedDate = this.daysInMonth[index];
     this.startDate = this.initialSelectedDate;
     this.endDate = this.initialSelectedDate;
@@ -130,18 +107,18 @@ class DatePicker {
     } else {
       this.startDate = this.initialSelectedDate;
     }
+
     this.highlightSelectedDateRange();
     //call back to handle the date picker's output
     this.setDateCallback(this.startDate, this.endDate);
 
   }
 
-  /**
-   * if the new selected range is a single date and the old range is also a single date
-   * and if both are the same then set the start and end dates to null;
-   */
-  deSelecteDateRange() {
-
+  deselectDateRange() {
+    this.startDate = null;
+    this.endDate = null;
+    this._prevEnd = null;
+    this._prevStart = null;
   }
 
   /**
@@ -209,7 +186,7 @@ const createDatePickerElem = (datePicker: DatePicker) => {
 
   let monthDiv = createMonthElem(datePicker);
   let yearDiv = createYearElem(datePicker);
-  let rightArrow = creatNavArrows('<', datePicker.test.bind(datePicker));
+  let rightArrow = creatNavArrows('<', () => { });
   let leftArrow = creatNavArrows('>', () => { });
 
   //add the header elements for the date picker in order.
@@ -236,11 +213,11 @@ const createDatePickerElem = (datePicker: DatePicker) => {
 
 };
 
-const creatNavArrows = (icon: string, callback: () => void) => {
+const creatNavArrows = (icon: string, callback?: () => void) => {
   let arrow = document.createElement('div');
   arrow.classList.add('navArrow');
   arrow.innerHTML = icon;
-  arrow.onclick = () => { callback() };
+  arrow.onclick = () => { callback ? callback() : '' };
   return arrow;
 }
 
@@ -288,7 +265,7 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   dayEle.classList.add('day');
 
   dayEle.onclick = () => {
-    datePicker.setSingleDateRange(index);
+    // datePicker.setSingleDateRange(index);
   }
 
   dayEle.oncontextmenu = () => {
@@ -320,4 +297,4 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
 let picker = new DatePicker(new Date(), (start, end) => { });
 
 const container = document.getElementById('date-picker');
-container?.appendChild(picker.pickerElem);
+container?.appendChild(picker.pickerElemContainer);
