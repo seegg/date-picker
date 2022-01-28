@@ -3,6 +3,7 @@ interface IDay {
   dayOfWeek: number,
   month: number,
   year: number,
+  toDate: () => Date
 }
 
 class DatePicker {
@@ -11,11 +12,15 @@ class DatePicker {
   daysInMonth: IDay[] = [];
   startDate: IDay | null = null;
   endDate: IDay | null = null;
+
+  pickerElem: HTMLDivElement;
+
   constructor() {
     const date = new Date();
     this.month = date.getMonth();
     this.year = date.getFullYear();
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+    this.pickerElem = createDatePickerElem(this);
   }
 
   /**
@@ -36,6 +41,17 @@ class DatePicker {
     return days;
   }
 
+  /**
+   * Check whether the target date is within the range of the start and end dates.
+   * @param target the target date
+   * @param start the start date of the range
+   * @param end the end date of the range
+   * @returns boolean value whether target date is in range or not.
+   */
+  static checkIfDateIsWithinRange(target: Date, start: Date, end: Date) {
+    return target.getTime() >= start.getTime() && target.getTime() <= end.getTime();
+  }
+
   setYear(year: number) {
     this.year = year;
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
@@ -46,13 +62,53 @@ class DatePicker {
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
   }
 
-  selectDateStart(index: number) {
+  setStartDateRange(index: number) {
+    this.startDate = this.daysInMonth[index];
+    this.endDate = this.startDate;
     console.log(index);
   }
 
-  selectDateEnd(index: number) {
-    console.log(index);
+  setEndDateRange(index: number) {
+    if (!this.startDate) return;
+    this.endDate = this.daysInMonth[index];
+    if (this.endDate.toDate().getTime() < this.startDate.toDate().getTime()) {
+      let temp = this.startDate;
+      this.startDate = this.endDate;
+      this.endDate = temp;
+    }
+
+    this.highlightSelectedDateRange();
+
   }
+
+
+
+  /**
+   * toggle classes for .day elements to highlight those
+   * in the selected date range.
+   */
+  highlightSelectedDateRange() {
+    let dayElems = document.getElementsByClassName('day');
+    this.daysInMonth.forEach((day, index) => {
+      if (this.isInSelectedRange(day.toDate())) {
+        dayElems[index].classList.add('day-selected');
+      } else {
+        dayElems[index].classList.remove('day-selected');
+      }
+    })
+  }
+
+  /**
+   * Check if target date is within selected date range.
+   * @param target target date
+   * @returns boolean
+   */
+  isInSelectedRange(target: Date): boolean {
+    if (this.startDate === null || this.endDate === null) return false;
+
+    return DatePicker.checkIfDateIsWithinRange(target, this.startDate.toDate(), this.endDate.toDate());
+  }
+
 }
 
 
@@ -68,17 +124,27 @@ class Day implements IDay {
     this.dayOfWeek = tempDate.getDay();
     this.month = tempDate.getMonth();
   }
+
+  toDate(): Date {
+    return new Date(this.year, this.month, this.date);
+  }
 }
 
 
-const createDatePickerElem = () => {
-  let datePicker = new DatePicker();
-
-  const container = document.getElementById('date-picker');
+const createDatePickerElem = (datePicker: DatePicker) => {
 
   let pickerElem = document.createElement('div');
   pickerElem.classList.add('date-picker');
 
+  let rightArrow = creatNavArrows('<', () => { });
+  let leftArrow = creatNavArrows('>', () => { });
+
+  let navContainer = document.createElement('div');
+  navContainer.classList.add('navHeader');
+  navContainer.appendChild(rightArrow);
+  navContainer.appendChild(leftArrow);
+
+  pickerElem.appendChild(navContainer);
 
   for (let i = 0; i < 6; i++) {
     let weekElem = document.createElement('div');
@@ -90,10 +156,16 @@ const createDatePickerElem = () => {
     }
     pickerElem.appendChild(weekElem);
   }
-
-  container?.appendChild(pickerElem);
+  return pickerElem;
 
 };
+
+const creatNavArrows = (icon: string, callback: () => void) => {
+  let arrow = document.createElement('div');
+  arrow.classList.add('navArrow');
+  arrow.innerHTML = icon;
+  return arrow;
+}
 
 /**
  * Create the element for Day object.
@@ -106,11 +178,11 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   const date = datePicker.daysInMonth[index];
   dayEle.classList.add('day');
   dayEle.onpointerdown = () => {
-    datePicker.selectDateStart(index)
+    datePicker.setStartDateRange(index)
   };
   dayEle.onpointermove;
   dayEle.onpointerup = () => {
-    datePicker.selectDateEnd(index)
+    datePicker.setEndDateRange(index)
   };
   if (date.month !== datePicker.month) dayEle.classList.add('not-current-month');
   let dateNumElem = document.createElement('p');
@@ -119,4 +191,7 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   return dayEle;
 };
 
-createDatePickerElem();
+let picker = new DatePicker();
+
+const container = document.getElementById('date-picker');
+container?.appendChild(picker.pickerElem);

@@ -30,16 +30,8 @@ html {
   user-select: none;
 }
 
-.day-selected{
-  background-color: hsl(161, 51%, 50%);
-}
-
 .day:hover{
   background-color: hsl(34, 78%, 71%);
-}
-
-.day-selected:hover{
-  background-color: hsl(161, 78%, 50%);
 }
 
 .day-label{
@@ -60,4 +52,28 @@ html {
 .not-current-month{
   color: lightgray;
   background-color: hsl(0, 0%, 95%);
+}
+
+.day-selected{
+  background-color: hsl(161, 51%, 50%);
+}
+
+.day-selected:hover{
+  background-color: hsl(161, 78%, 50%);
+}
+
+.navHeader{
+    height: 45px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navArrow{
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
