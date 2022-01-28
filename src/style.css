@@ -21,7 +21,7 @@
   outline: solid 1px hsl(120, 50%, 45%);
 }
 
-.day{
+.date-picker-day{
   width: 35px;
   height: 35px;
   display: flex;
@@ -33,7 +33,7 @@
   user-select: none;
 }
 
-.day:hover{
+.date-picker-day:hover{
   outline: solid 2px black;
 }
 

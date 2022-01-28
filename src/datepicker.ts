@@ -149,7 +149,7 @@ class DatePicker {
    * in the selected date range.
    */
   highlightSelectedDateRange() {
-    let dayElems = document.getElementsByClassName('day');
+    let dayElems = document.getElementsByClassName('date-picker-day');
     this.daysInMonth.forEach((day, index) => {
       if (this.isInSelectedRange(day.toDate())) {
         dayElems[index].classList.add('day-selected');
@@ -298,7 +298,7 @@ const createWeekLabelElem = (weekLabel: string[] = daysOfTheWeek) => {
 const createDayElem = (datePicker: DatePicker, index: number) => {
   let dayEle = document.createElement('div');
   const date = datePicker.daysInMonth[index];
-  dayEle.classList.add('day');
+  dayEle.classList.add('date-picker-day');
 
   dayEle.onclick = () => {
     // datePicker.setSingleDateRange(index);
