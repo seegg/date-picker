@@ -1,6 +1,6 @@
 import './style.css';
 
-import { createDatePickerElem } from './create-datepicker-layout';
+import { createDatePickerElem } from './datepicker-layout';
 interface IDay {
   date: number,
   dayOfWeek: number,
