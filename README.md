@@ -1,6 +1,8 @@
 # date-picker
 
-### To create a new Date Picker:
+# (Demo)[https://seegg.github.io/date-picker]
+
+### create a new Date Picker:
 
 let datePicker = new DatePicker(Date, Callback)
 
