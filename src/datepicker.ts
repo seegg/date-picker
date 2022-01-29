@@ -137,14 +137,14 @@ export default class DatePicker {
 
   /**
    * Set the initial values for initialSelectedDate startDate and endDate
-   * reset date value if it's the same as previous values.
+   * reset date value if it's in the same as previous values.
    * @param index The index of the Day object for daysInMonth array.
    */
   setStartDateRange(index: number) {
 
     this.initialSelectedDate = this.daysInMonth[index];
 
-    if (this.startDate && this.endDate && !Day.CompareDays(this.startDate, this.endDate)) {
+    if (this.startDate && this.endDate && this.isInSelectedRange(this.initialSelectedDate.toDate())) {
       this.deselectDateRange();
     } else {
       this.startDate = this.initialSelectedDate;
@@ -173,16 +173,22 @@ export default class DatePicker {
    * @param index Index of the Day object relating to a certain date of the month
    */
   setMultiMonthDateRange(index: number) {
+
     const daysContainer = document.getElementById('days-container-' + this.id);
     if (!this.isInMultiMonthSelectMode) {
+      this.initialSelectedDate = this.daysInMonth[index];
       this.isInSelectMode = false;
-      this.startDate = this.daysInMonth[index];
-      this.endDate = this.daysInMonth[index];
       this.isInMultiMonthSelectMode = true;
+      this.startDate = this.initialSelectedDate;
+      this.endDate = this.initialSelectedDate;
       daysContainer?.classList.add('date-picker-long-select');
     } else {
       daysContainer?.classList.remove('date-picker-long-select');
       this.endDate = this.daysInMonth[index];
+      if (Day.CompareDays(this.startDate!, this.endDate)! < 0) {
+        this.startDate = this.endDate;
+        this.endDate = this.initialSelectedDate;
+      }
       this.isInMultiMonthSelectMode = false;
     }
     this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate());
