@@ -207,7 +207,7 @@ export default class DatePicker {
    * in the selected date range.
    */
   highlightSelectedDateRange() {
-    let dayElems = document.getElementsByClassName('date-picker-day');
+    let dayElems = this.pickerElemContainer.getElementsByClassName('date-picker-day');
     this.daysInMonth.forEach((day, index) => {
       if (this.isInSelectedRange(day.toDate())) {
         dayElems[index].classList.add('day-selected');
