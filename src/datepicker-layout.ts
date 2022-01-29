@@ -95,8 +95,13 @@ const createMonthElem = (datePicker: DatePicker, names = months) => {
   monthDiv.appendChild(monthSelect);
 
   monthDiv.onclick = () => {
-    monthSelect.classList.add('date-picker-month-select-show');
-    monthSelect.focus();
+    new Promise(resolve => {
+      resolve(monthSelect.classList.add('date-picker-month-select-show'));
+    }).then(() => {
+      const chileElemHeight = monthSelect.firstElementChild?.getBoundingClientRect().height;
+      monthSelect.scrollTo(0, chileElemHeight! * datePicker.month || 0);
+      monthSelect.focus();
+    })
   }
   return monthDiv;
 }
