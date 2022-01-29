@@ -12,10 +12,29 @@
 </head>
 
 <body>
-  <div>
-    <input type="text" name="" id="date-input">
+  <main id="app">
+    <div clas="date-input">
+      <label for="date-input">Date:</label>
+      <input type="text" name="date-input" id="date-input">
+    </div>
     <div id="date-picker"></div>
-  </div>
+  </main>
+
+  <style>
+    #app {
+      padding-top: 50px;
+      display: flex;
+      width: 100%;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .date-input {
+      font-weight: 500;
+      display: flex;
+    }
+  </style>
 </body>
 
 </html>
