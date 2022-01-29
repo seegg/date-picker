@@ -4,7 +4,10 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 
 module.exports = {
-  entry: { 'datepicker': './src/datepicker.ts' },
+  entry: {
+    'datepicker': './src/datepicker.ts',
+    'demo': './src/demo.ts'
+  },
   output: {
     path: path.join(__dirname, 'dist'),
     filename: '[name].min.js'

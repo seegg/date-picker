@@ -11,7 +11,7 @@ interface IDay {
 
 type DateCallbackFn = (startDate: Date | null, endDate: Date | null) => any;
 
-export class DatePicker {
+export default class DatePicker {
   id: number;
   month: number;
   year: number;
@@ -253,10 +253,3 @@ class Day implements IDay {
     return new Date(this.year, this.month, this.date);
   }
 }
-
-
-
-let picker = new DatePicker(new Date(), (start, end) => { console.log(start, end) });
-
-const container = document.getElementById('date-picker');
-container?.appendChild(picker.pickerElemContainer); 
