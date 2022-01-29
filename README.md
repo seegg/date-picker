@@ -1,6 +1,6 @@
 # date-picker
 
-# (Demo)[https://seegg.github.io/date-picker]
+# [Demo](https://seegg.github.io/date-picker)
 
 ### create a new Date Picker:
 
