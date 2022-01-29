@@ -38,7 +38,18 @@ export const createDatePickerElem = (datePicker: DatePicker) => {
   pickerElem.appendChild(daysOfWeekLabels);
 
   pickerElem.oncontextmenu = (e) => { e.preventDefault(); };
+  //container to hold the dates in the month. add an id to
+  //change outline colour depending if it's in multi month select mode
+  //or not.
   let daysContainer = document.createElement('div');
+  daysContainer.id = 'days-container-' + datePicker.id;
+  daysContainer.classList.add('date-picker-days-container');
+  if (datePicker.isInMultiMonthSelectMode) {
+    daysContainer.classList.add('date-picker-long-select');
+  }
+
+  //The dates are group into weeks which is then group together
+  //in the daysContainer.
   for (let i = 0; i < 6; i++) {
     let weekElem = document.createElement('div');
     weekElem.classList.add('date-picker-week');
@@ -55,6 +66,12 @@ export const createDatePickerElem = (datePicker: DatePicker) => {
 
 };
 
+/**
+ * Create the month navigation elements.
+ * @param icon The string for the left and right navigation for the month.
+ * @param callback onclick callback.
+ * @returns 
+ */
 const creatNavArrows = (icon: string, callback?: () => void) => {
   let arrow = document.createElement('div');
   arrow.classList.add('date-picker-navArrow');
@@ -155,33 +172,22 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   const date = datePicker.daysInMonth[index];
   dayEle.classList.add('date-picker-day', 'date-picker-label');
 
-  dayEle.onclick = () => {
-    // datePicker.setSingleDateRange(index);
-  }
-
   dayEle.oncontextmenu = () => {
-    // datePicker.test();
+    datePicker.setMultiMonthDateRange(index);
   };
 
   dayEle.onpointerdown = (evt) => {
     if (evt.button === 2) return;
     datePicker.isInSelectMode = true;
-    // datePicker.sentSingDate = false;
     datePicker.setStartDateRange(index)
   };
   //only select dates on pointer move event if picker is in select mode.
-  dayEle.onpointermove = () => {
+  dayEle.onpointermove = (evt) => {
+    evt.preventDefault();
     if (datePicker.isInSelectMode) {
       datePicker.setEndDateRange(index)
     }
   };
-
-  dayEle.ontouchmove = () => {
-    console.log(datePicker.isInSelectMode, index);
-    if (datePicker.isInSelectMode) {
-      datePicker.setEndDateRange(index)
-    }
-  }
 
   dayEle.onpointerup = (evt) => {
     evt.stopPropagation();

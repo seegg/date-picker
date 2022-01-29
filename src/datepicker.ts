@@ -9,7 +9,7 @@ interface IDay {
   toDate: () => Date
 }
 
-type DateCallbackFn = (startDate: Date | null, endDate: Date | null) => any;
+type DateCallbackFn = (startDate: Date | null, endDate: Date | null) => void;
 
 export default class DatePicker {
   id: number;
@@ -156,6 +156,12 @@ export default class DatePicker {
    * @param index The index of the Day object for daysInMonth array.
    */
   setStartDateRange(index: number) {
+
+    if (this.isInMultiMonthSelectMode) {
+      this.setMultiMonthDateRange(index);
+      return;
+    }
+
     this.initialSelectedDate = this.daysInMonth[index];
     this.startDate = this.initialSelectedDate;
     this.endDate = this.initialSelectedDate;
@@ -175,6 +181,7 @@ export default class DatePicker {
   }
 
   setEndDateRange(index: number) {
+    if (this.isInMultiMonthSelectMode) return;
     if (!this.initialSelectedDate || !this.isInSelectMode) return;
     this.endDate = this.daysInMonth[index];
     //if the endate is before the initial date set the startdate back to the end date
@@ -186,6 +193,29 @@ export default class DatePicker {
       this.startDate = this.initialSelectedDate;
     }
 
+    this.highlightSelectedDateRange();
+  }
+
+  /**
+   * Select a date range across multiple different months. or not, but you can if you want.
+   * @param index Index of the Day object relating to a certain date of the month
+   */
+  setMultiMonthDateRange(index: number) {
+    const daysContainer = document.getElementById('days-container-' + this.id);
+    if (!this.isInMultiMonthSelectMode) {
+      this.startDate = this.daysInMonth[index];
+      this.endDate = this.daysInMonth[index];
+      this._prevStart = this.startDate;
+      this._prevEnd = this.endDate;
+      this.isInMultiMonthSelectMode = true;
+      daysContainer?.classList.add('date-picker-long-select');
+    } else {
+      daysContainer?.classList.remove('date-picker-long-select');
+      this.endDate = this.daysInMonth[index];
+      this._prevEnd = this.endDate;
+      this.isInMultiMonthSelectMode = false;
+    }
+    this.sendDateCallback(this.startDate!.toDate(), this.endDate.toDate());
     this.highlightSelectedDateRange();
   }
 
