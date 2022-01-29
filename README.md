@@ -23,3 +23,5 @@ Click on a date on the picker to select it.
 Click and drag across multiple boxes to select a range of dates.
 
 To make a selection across multiple months, use context menu to select the first date and then use either normal click or context menu to select the second date.
+
+reset selection by clicking on one of the selected dates.
