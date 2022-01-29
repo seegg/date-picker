@@ -4,12 +4,16 @@
 
 ### create a new Date Picker:
 
+
 `const datePicker = new DatePicker(Date, Callback)`
+
 
 The constructor accepts a Date object and a callback function as arguments. The start date and the end date selected from the date picker is passed to the callback. 
 
 `const callback = (startDate, endDate)=>{/* do stuff */}`
 
+Get the HTML layout:
+`datePicker.getLayout()`
 
 #### Picking a date
 
