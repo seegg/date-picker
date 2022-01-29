@@ -1,6 +1,6 @@
 import './style.css';
 
-import { createDatePickerElem } from './datepicker-layout';
+import { createDatePickerLayout } from './datepicker-layout';
 interface IDay {
   date: number,
   dayOfWeek: number,
@@ -37,7 +37,7 @@ export default class DatePicker {
     this.month = date.getMonth();
     this.year = date.getFullYear();
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
-    this.pickerElem = createDatePickerElem(this);
+    this.pickerElem = createDatePickerLayout(this);
     this.pickerElemContainer = document.createElement('div');
     this.pickerElemContainer.id = 'date-picker-container-' + this.id;
     this.pickerElemContainer.classList.add('date-picker-container');
@@ -78,12 +78,13 @@ export default class DatePicker {
    * @param year 
    */
   setYear(year: number) {
+    if (this.year === year) return;
     this.year = year;
     const newDate = new Date(this.year, this.month, 1);
     this.month = newDate.getMonth();
     this.year = newDate.getFullYear();
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
-    const newPickerElem = createDatePickerElem(this);
+    const newPickerElem = createDatePickerLayout(this);
     this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
     this.pickerElem = newPickerElem;
     this.highlightSelectedDateRange();
@@ -94,12 +95,13 @@ export default class DatePicker {
    * @param month
    */
   setMonth(month: number) {
+    if (this.month === month) return;
     this.month = month;
     const newDate = new Date(this.year, this.month, 1);
     this.month = newDate.getMonth();
     this.year = newDate.getFullYear();
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
-    const newPickerElem = createDatePickerElem(this);
+    const newPickerElem = createDatePickerLayout(this);
     this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
     this.pickerElem = newPickerElem;
     this.highlightSelectedDateRange();

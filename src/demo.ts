@@ -1,6 +1,6 @@
 import DatePicker from './datepicker';
 
-let picker = new DatePicker(new Date(), (start, end) => {
+let picker = new DatePicker(new Date(9999, 2, 1), (start, end) => {
   let input = document.getElementById('date-input') as HTMLInputElement;
   if (start === null || end === null) {
     input.value = '';
@@ -15,7 +15,7 @@ const secondDisplay = document.createElement('div');
 // secondDisplay.style.width = '200px';
 secondDisplay.style.height = '50px';
 
-let picker2 = new DatePicker(new Date(2000, 5, 1), (start, end) => {
+let picker2 = new DatePicker(new Date(-5000000000000), (start, end) => {
   if (start && end) {
     secondDisplay.innerHTML = `start: ${formatDate(start)} end: ${formatDate(end)}`;
   } else {

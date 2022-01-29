@@ -111,7 +111,6 @@
 }
 
 .day-of-week-sun{
-  /* background-color: var(--label-sunday-bg); */
   color: var(--label-sunday-colour);
 }
 
@@ -163,7 +162,7 @@
   width: var(--month-select-width);
   height: var(--month-select-height);
   left: 50%;
-  top: 30px;
+  top: 35px;
   transform: translateX(-50%);
   position: absolute;
   display: none;
@@ -171,9 +170,11 @@
   align-items: center;
   background-color: var(--month-select-bg);
   border: none;
+  outline: none;
   border-radius: 3px;
   box-shadow: var(--month-select-box-shadow);
   overflow: auto;
+  z-index: 10;
   -ms-overflow-style: none;  /* Internet Explorer 10+ */
   scrollbar-width: none;  /* Firefox */
 }
@@ -204,9 +205,66 @@
   background-color: hsl(0, 0%, 100%);
 }
 
-
 .date-picker-month-select-selected{
   background-color: var(--month-select-selected-month);
+}
+
+.date-picker-year-select{
+  width: 100px;
+  height: 200px;
+  left: 50%;
+  top: 35px;
+  box-shadow: var(--month-select-box-shadow);
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  background-color: whitesmoke;
+  border-radius: 3px;
+  z-index: 10;
+}
+
+.date-picker-year-select-input{
+  text-align: center;
+  font-weight: 500;
+  font-size: 1rem;
+  box-sizing: border-box;
+  border-radius: 3px;
+  width: 100px;
+  height: 2rem;
+  outline: none;
+  border: none;
+  -moz-appearance: textfield;
+}
+
+.date-picker-year-select-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.date-picker-year-select-item-container{
+  height: 100%;
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.date-picker-year-select-item-container::-webkit-scrollbar{
+  display: none;  /* Safari and Chrome */
+}
+
+.date-picker-year-select-item{
+  min-height: 35px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--month-select-month-bg);
+  box-sizing: border-box;
+}
+
+.date-picker.hasHover .date-picker-year-select-item:hover{
+  background-color: var(--month-select-month-hover-bg);
 }
 
 /*# sourceMappingURL=datepicker.css.map*/

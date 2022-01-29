@@ -4,12 +4,17 @@ const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 const daysOfTheWeek = ['S', 'M', 'Tu', 'W', 'Th', 'F', 'S'];
 const arrowSymbols = ['<', '>'];
 
+//values for year select input element
+const maxYearDefault = 9999;
+const minYearDefault = 0;
+const stepDefault = 3;
+
 /**
  * create the html layout for the date picker.
  * @param datePicker current date picker instance
  * @returns HTMLDivElement layout for current date picker.
  */
-export const createDatePickerElem = (datePicker: DatePicker) => {
+export const createDatePickerLayout = (datePicker: DatePicker) => {
 
   let pickerElem = document.createElement('div');
   //event handlers dealing for toggling select mode to false
@@ -21,11 +26,11 @@ export const createDatePickerElem = (datePicker: DatePicker) => {
   };
   pickerElem.classList.add('date-picker');
 
-  let monthDiv = createMonthElem(datePicker);
-  let yearDiv = createYearElem(datePicker);
+  let monthDiv = createMonth(datePicker);
+  let yearDiv = createYear(datePicker);
   let rightArrow = creatNavArrows(arrowSymbols[0], (datePicker.prevMonth.bind(datePicker)));
   let leftArrow = creatNavArrows(arrowSymbols[1], datePicker.nextMonth.bind(datePicker));
-  let daysOfWeekLabels = createWeekLabelElem();
+  let daysOfWeekLabels = createWeekLabel();
   //add the header elements for the date picker in order.
   let navContainer = document.createElement('div');
   navContainer.classList.add('date-picker-navHeader');
@@ -55,7 +60,7 @@ export const createDatePickerElem = (datePicker: DatePicker) => {
     weekElem.classList.add('date-picker-week');
 
     for (let j = 0; j < 7; j++) {
-      let dayElem = createDayElem(datePicker, i * 7 + j);
+      let dayElem = createDay(datePicker, i * 7 + j);
       weekElem.appendChild(dayElem);
     }
     daysContainer.appendChild(weekElem);
@@ -86,22 +91,19 @@ const creatNavArrows = (icon: string, callback?: () => void) => {
  * @param names Names of the month
  * @returns Div Element for dispalying month name.
  */
-const createMonthElem = (datePicker: DatePicker, names = months) => {
+const createMonth = (datePicker: DatePicker, names = months) => {
   let monthDiv = document.createElement('div');
-  let monthSelect = createMonthSelecElem(datePicker, names);
+  let monthSelect = createMonthSelect(datePicker, names);
   monthDiv.id = 'picker-' + datePicker.id + '-month';
   monthDiv.classList.add('date-picker-month');
   monthDiv.innerHTML = names[datePicker.month];
   monthDiv.appendChild(monthSelect);
 
   monthDiv.onclick = () => {
-    new Promise(resolve => {
-      resolve(monthSelect.classList.add('date-picker-month-select-show'));
-    }).then(() => {
-      const chileElemHeight = monthSelect.firstElementChild?.getBoundingClientRect().height;
-      monthSelect.scrollTo(0, chileElemHeight! * datePicker.month || 0);
-      monthSelect.focus();
-    })
+    monthSelect.classList.add('date-picker-month-select-show')
+    const chileElemHeight = monthSelect.firstElementChild?.getBoundingClientRect().height;
+    monthSelect?.scrollTo(0, chileElemHeight! * (datePicker.month - 1) || 0);
+    monthSelect?.focus();
   }
   return monthDiv;
 }
@@ -112,7 +114,7 @@ const createMonthElem = (datePicker: DatePicker, names = months) => {
  * @param names Names of the month
  * @returns Div Element for dispalying month select.
  */
-const createMonthSelecElem = (datePicker: DatePicker, names = months) => {
+const createMonthSelect = (datePicker: DatePicker, names = months) => {
   let monthSelect = document.createElement('div');
   monthSelect.classList.add('date-picker-month-select');
   monthSelect.tabIndex = 0;
@@ -137,12 +139,59 @@ const createMonthSelecElem = (datePicker: DatePicker, names = months) => {
  * @param datePicker Current instance of DatePicker
  * @returns Div Element for displaying selected year.
  */
-const createYearElem = (datePicker: DatePicker) => {
+const createYear = (datePicker: DatePicker) => {
   let yearDiv = document.createElement('div');
   yearDiv.id = 'picker-' + datePicker.id + '-year';
   yearDiv.classList.add('date-picker-year');
   yearDiv.innerHTML = datePicker.year.toString();
+
+  let yearSelect = createYearSelect(datePicker);
+  yearDiv.appendChild(yearSelect);
+
   return yearDiv
+}
+
+
+const createYearSelect = (datepicker: DatePicker) => {
+  let yearSelect = document.createElement('div');
+  let yearInput = createYearSelectInput(datepicker.year);
+  let yearItems = createYearSelectItems(datepicker, datepicker.year);
+  yearInput.value = datepicker.year.toString();
+
+
+  yearSelect.classList.add('date-picker-year-select');
+  yearInput.classList.add('date-picker-year-select-input');
+  yearSelect.tabIndex = 1;
+
+  yearSelect.appendChild(yearInput);
+  yearSelect.appendChild(yearItems);
+  return yearSelect;
+}
+
+const createYearSelectInput = (year: number, max: number = maxYearDefault, min: number = minYearDefault, step: number = stepDefault) => {
+  let yearInput = document.createElement('input');
+  yearInput.type = 'number';
+  yearInput.max = max.toString();
+  yearInput.min = min.toString();
+  yearInput.step = step.toString();
+  return yearInput;
+}
+
+const createYearSelectItems = (datePicker: DatePicker, year: number, numberOfItems: number = 10) => {
+  let yearItemContainer = document.createElement('div');
+  yearItemContainer.classList.add('date-picker-year-select-item-container');
+  let currentYear = year - 5 >= 0 ? year - 5 : 0;
+  for (let i = 0; i < 10; i++) {
+    let yearItem = document.createElement('div');
+    let selectYear = currentYear + i;
+    yearItem.innerHTML = selectYear.toString();
+    yearItem.classList.add('date-picker-year-select-item');
+    yearItem.onclick = () => {
+      datePicker.setYear(selectYear);
+    }
+    yearItemContainer.appendChild(yearItem);
+  }
+  return yearItemContainer;
 }
 
 
@@ -151,7 +200,7 @@ const createYearElem = (datePicker: DatePicker) => {
  * @param weekLabel array of names corrensponding to day of the week.
  * @returns 
  */
-const createWeekLabelElem = (weekLabel: string[] = daysOfTheWeek) => {
+const createWeekLabel = (weekLabel: string[] = daysOfTheWeek) => {
   let weekLabelDiv = document.createElement('div');
   weekLabelDiv.classList.add('date-picker-week');
   for (let i = 0; i < 7; i++) {
@@ -172,7 +221,7 @@ const createWeekLabelElem = (weekLabel: string[] = daysOfTheWeek) => {
  * @param index index number of daysInMonth property from datePicker instance.
  * @returns HTMLDivElement for the selected date.
  */
-const createDayElem = (datePicker: DatePicker, index: number) => {
+const createDay = (datePicker: DatePicker, index: number) => {
   let dayEle = document.createElement('div');
   const date = datePicker.daysInMonth[index];
   dayEle.classList.add('date-picker-day', 'date-picker-label');
@@ -234,4 +283,12 @@ const disableHoverOnTouch = (container: HTMLElement): void => {
   document.addEventListener('touchstart', updateLastTouchTime, true)
   document.addEventListener('touchstart', disableHover, true)
   document.addEventListener('mousemove', enableHover, true)
+}
+
+function debounce(callback: () => void, wait: number = 300) {
+  let timer: NodeJS.Timeout;
+  return function (...args: any) {
+    clearTimeout(timer);
+    timer = setTimeout(() => { callback.apply(null, args) }, wait);
+  }
 }
