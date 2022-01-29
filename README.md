@@ -1,4 +1,4 @@
-# date-picker
+# date picker
 
 # [Demo](https://seegg.github.io/date-picker)
 
