@@ -175,6 +175,14 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
       datePicker.setEndDateRange(index)
     }
   };
+
+  dayEle.ontouchmove = () => {
+    console.log(datePicker.isInSelectMode, index);
+    if (datePicker.isInSelectMode) {
+      datePicker.setEndDateRange(index)
+    }
+  }
+
   dayEle.onpointerup = (evt) => {
     evt.stopPropagation();
     datePicker.setEndDateRange(index)

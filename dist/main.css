@@ -1,0 +1,54 @@
+/*!*****************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./src/style.css ***!
+  \*****************************************************************/
+html {
+  box-sizing: border-box;
+  background-color: var(--bg-colour);
+  font-family: 'Open Sans', sans-serif;
+  font-weight: 600;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.date-picker{
+  width: fit-content;
+  height: fit-content;
+  border-radius: 5px;
+  box-shadow: 0px 5px 5px black ;
+  padding: 5px;
+  padding-top: 2px;
+}
+
+.day{
+  width: 35px;
+  height: 35px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2px;
+  background-color: antiquewhite;
+  border-radius: 3px;
+  user-select: none;
+}
+
+.day:hover{
+  background-color: hsl(34, 78%, 71%);
+}
+
+.day-label{
+ background: none;
+}
+
+.day-label:hover{
+  background: none;
+}
+
+.week{
+  display: flex;
+  margin: 2px;
+  margin-left: 1px;
+  margin-right: 1px;
+}
+
+/*# sourceMappingURL=main.css.map*/
