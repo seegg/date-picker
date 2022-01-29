@@ -21,7 +21,7 @@
   --label-date-selected-bg:hsl(161, 51%, 50%);
   --label-date-selected-bg-hover:hsl(161, 51%, 50%);
 
-  --outline-long-select: solid 2px hsl(22, 50%, 50%);
+  --outline-long-select: solid 3px hsl(22, 83%, 47%);
 
   --box-shadow-container: 0px 5px 5px hsl(0, 0%, 0%) ;
 
@@ -43,7 +43,6 @@
   height: fit-content;
   border-radius: 5px;
   box-shadow: var(--box-shadow-container);
-  padding-bottom: 5px;
   box-sizing: border-box;
   font-family: 'Open Sans', sans-serif;
   font-weight: 600;
