@@ -1,7 +1,7 @@
 import DatePicker from "./datepicker";
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const daysOfTheWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
+const daysOfTheWeek = ['S', 'M', 'Tu', 'W', 'Th', 'F', 'S'];
 const arrowSymbols = ['<', '>'];
 
 /**

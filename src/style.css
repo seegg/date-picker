@@ -10,6 +10,7 @@
   --label-date-bg: hsl(34, 78%, 91%);
   --label-box-shadow-hover: 1px 1px 1px 1px hsl(0, 0%, 0%);
   --label-sunday-bg:hsl(0, 50%, 75%);
+  --label-sunday-colour:hsl(0, 80%, 50%);
   /* style for displaying dates not in the current month */
   --label-not-current-font-colour:hsl(0, 0%, 83%);
   --label-not-current-bg:hsl(0, 0%, 95%);
@@ -108,7 +109,8 @@
 }
 
 .day-of-week-sun{
-  background-color: var(--label-sunday-bg);
+  /* background-color: var(--label-sunday-bg); */
+  color: var(--label-sunday-colour);
 }
 
 .date-picker.hasHover .day-of-week-label:hover{

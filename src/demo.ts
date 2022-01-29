@@ -29,5 +29,6 @@ const formatDate = (date: Date | null): string => {
 const container = document.getElementById('date-picker');
 container?.appendChild(picker.getLayout());
 container?.appendChild(document.createElement('br'));
-container?.appendChild(secondDisplay);
 container?.appendChild(picker2.getLayout());
+container?.appendChild(document.createElement('br'));
+container?.appendChild(secondDisplay);
