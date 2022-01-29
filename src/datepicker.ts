@@ -1,4 +1,6 @@
-import { createDatePickerElem } from './create-datepicker-layout'
+import './style.css';
+
+import { createDatePickerElem } from './create-datepicker-layout';
 interface IDay {
   date: number,
   dayOfWeek: number,
@@ -27,7 +29,6 @@ export class DatePicker {
   sentSingleDate: boolean = false;
   static baseID = 1;
   /**
-   * 
    * @param date Date object
    * @param callback Callback to handle when a date range has been selected, has access to startDate and endDate properties.
    */
