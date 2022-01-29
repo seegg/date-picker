@@ -19,6 +19,7 @@ export default class DatePicker {
   initialSelectedDate: IDay | null = null;
   startDate: IDay | null = null;
   endDate: IDay | null = null;
+  isSameDateValues = true;
   isInSelectMode: boolean = false;
   isInMultiMonthSelectMode: boolean = false;
   pickerElem: HTMLDivElement;
@@ -128,10 +129,12 @@ export default class DatePicker {
    * Decide if conditions for triggering the callback to send the date values is meet.
    */
   triggerDateCallback() {
+    if (this.isSameDateValues) return;
     if (this.isInMultiMonthSelectMode) return;
     //Is not in select mode and start date and end date is not null.
     if (!this.isInSelectMode && this.startDate && this.endDate) {
       this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate());
+      this.isSameDateValues = true;
     }
   }
 
@@ -147,6 +150,7 @@ export default class DatePicker {
     if (this.startDate && this.endDate && this.isInSelectedRange(this.initialSelectedDate.toDate())) {
       this.deselectDateRange();
     } else {
+      this.isSameDateValues = false;
       this.startDate = this.initialSelectedDate;
       this.endDate = this.initialSelectedDate;
     }
@@ -176,6 +180,7 @@ export default class DatePicker {
 
     const daysContainer = document.getElementById('days-container-' + this.id);
     if (!this.isInMultiMonthSelectMode) {
+      this.isSameDateValues = false;
       this.initialSelectedDate = this.daysInMonth[index];
       this.isInSelectMode = false;
       this.isInMultiMonthSelectMode = true;
@@ -193,6 +198,7 @@ export default class DatePicker {
     }
     this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate());
     this.highlightSelectedDateRange();
+    this.isSameDateValues = true;
   }
 
   deselectDateRange() {

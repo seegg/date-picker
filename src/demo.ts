@@ -11,7 +11,7 @@ let picker = new DatePicker(new Date(), (start, end) => {
   }
 });
 
-let picker2 = new DatePicker(new Date(2000, 0, 1), (start, end) => {
+let picker2 = new DatePicker(new Date(2000, 5, 1), (start, end) => {
   if (start && end) {
     console.log('start:', formatDate(start), 'end:', formatDate(end));
   } else {
@@ -22,6 +22,7 @@ let picker2 = new DatePicker(new Date(2000, 0, 1), (start, end) => {
 const formatDate = (date: Date | null): string => {
   return date ? `${(date.getDate()).toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}` : '';
 }
-
-document.getElementById('date-picker')?.appendChild(picker.getLayout());
-document.getElementById('date-picker')?.appendChild(picker2.getLayout());
+const container = document.getElementById('date-picker');
+container?.appendChild(picker.getLayout());
+container?.appendChild(document.createElement('br'));
+container?.appendChild(picker2.getLayout());
