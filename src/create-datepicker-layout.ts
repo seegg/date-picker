@@ -124,13 +124,18 @@ const createYearElem = (datePicker: DatePicker) => {
 }
 
 
+/**
+ * 
+ * @param weekLabel array of names corrensponding to day of the week.
+ * @returns 
+ */
 const createWeekLabelElem = (weekLabel: string[] = daysOfTheWeek) => {
   let weekLabelDiv = document.createElement('div');
-  weekLabelDiv.classList.add('date-picker-week', 'week-label');
+  weekLabelDiv.classList.add('date-picker-week');
   for (let i = 0; i < 7; i++) {
     let dayOfWeek = document.createElement('div');
     dayOfWeek.innerHTML = weekLabel[i];
-    dayOfWeek.classList.add('day-of-week-label');
+    dayOfWeek.classList.add('day-of-week-label', 'date-picker-label');
     if (i === 0) {
       dayOfWeek.classList.add('day-of-week-sun');
     }
@@ -148,7 +153,7 @@ const createWeekLabelElem = (weekLabel: string[] = daysOfTheWeek) => {
 const createDayElem = (datePicker: DatePicker, index: number) => {
   let dayEle = document.createElement('div');
   const date = datePicker.daysInMonth[index];
-  dayEle.classList.add('date-picker-day');
+  dayEle.classList.add('date-picker-day', 'date-picker-label');
 
   dayEle.onclick = () => {
     // datePicker.setSingleDateRange(index);
