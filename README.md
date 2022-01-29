@@ -13,6 +13,7 @@ The constructor accepts a Date object and a callback function as arguments. The 
 `const callback = (startDate, endDate)=>{/* do stuff */}`
 
 Get the HTML layout:
+
 `datePicker.getLayout()`
 
 #### Picking a date
