@@ -19,14 +19,11 @@ export default class DatePicker {
   initialSelectedDate: IDay | null = null;
   startDate: IDay | null = null;
   endDate: IDay | null = null;
-  _prevStart: IDay | null = null;
-  _prevEnd: IDay | null = null;
   isInSelectMode: boolean = false;
   isInMultiMonthSelectMode: boolean = false;
   pickerElem: HTMLDivElement;
   pickerElemContainer: HTMLDivElement;
   sendDateCallback: DateCallbackFn;
-  sentSingleDate: boolean = false;
   static baseID = 1;
   /**
    * @param date Date object
@@ -131,23 +128,11 @@ export default class DatePicker {
    * Decide if conditions for triggering the callback to send the date values is meet.
    */
   triggerDateCallback() {
-    let shouldSendCallback = false;
-    //Is not in select mode and start date is not null.
-    if (!this.isInSelectMode && this.startDate) {
-      //Check if the current dates are the same as the previous dates sent
-      if (Day.CompareDays(this.startDate, this._prevStart!) !== 0 ||
-        Day.CompareDays(this.endDate!, this._prevEnd!) !== 0) {
-        shouldSendCallback = true;
-        this._prevStart = this.startDate;
-        this._prevEnd = this.endDate;
-        this.sentSingleDate = false;
-        //Check if the start and end dates are the same.
-      } else if (Day.CompareDays(this.startDate, this.endDate!) === 0 && !this.sentSingleDate) {
-        shouldSendCallback = true;
-        this.sentSingleDate = true;
-      }
+    if (this.isInMultiMonthSelectMode) return;
+    //Is not in select mode and start date and end date is not null.
+    if (!this.isInSelectMode && this.startDate && this.endDate) {
+      this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate());
     }
-    if (shouldSendCallback) this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate());
   }
 
   /**
@@ -157,31 +142,18 @@ export default class DatePicker {
    */
   setStartDateRange(index: number) {
 
-    if (this.isInMultiMonthSelectMode) {
-      this.setMultiMonthDateRange(index);
-      return;
-    }
-
     this.initialSelectedDate = this.daysInMonth[index];
-    this.startDate = this.initialSelectedDate;
-    this.endDate = this.initialSelectedDate;
 
-    //reset date values if it's the same as previous values.
-    if (this.sentSingleDate && this._prevStart) {
-      if (!Day.CompareDays(this.startDate, this.endDate)
-        && !Day.CompareDays(this._prevEnd!, this._prevStart) && !Day.CompareDays(this.startDate, this._prevStart)) {
-        this.deselectDateRange();
-        return;
-      }
+    if (this.startDate && this.endDate && !Day.CompareDays(this.startDate, this.endDate)) {
+      this.deselectDateRange();
+    } else {
+      this.startDate = this.initialSelectedDate;
+      this.endDate = this.initialSelectedDate;
     }
-    this._prevStart = this.startDate;
-    this._prevEnd = this.endDate;
-    this.sentSingleDate = false;
     this.highlightSelectedDateRange();
   }
 
   setEndDateRange(index: number) {
-    if (this.isInMultiMonthSelectMode) return;
     if (!this.initialSelectedDate || !this.isInSelectMode) return;
     this.endDate = this.daysInMonth[index];
     //if the endate is before the initial date set the startdate back to the end date
@@ -203,31 +175,25 @@ export default class DatePicker {
   setMultiMonthDateRange(index: number) {
     const daysContainer = document.getElementById('days-container-' + this.id);
     if (!this.isInMultiMonthSelectMode) {
+      this.isInSelectMode = false;
       this.startDate = this.daysInMonth[index];
       this.endDate = this.daysInMonth[index];
-      this._prevStart = this.startDate;
-      this._prevEnd = this.endDate;
       this.isInMultiMonthSelectMode = true;
       daysContainer?.classList.add('date-picker-long-select');
     } else {
       daysContainer?.classList.remove('date-picker-long-select');
       this.endDate = this.daysInMonth[index];
-      this._prevEnd = this.endDate;
       this.isInMultiMonthSelectMode = false;
     }
-    this.sendDateCallback(this.startDate!.toDate(), this.endDate.toDate());
+    this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate());
     this.highlightSelectedDateRange();
   }
 
   deselectDateRange() {
-    this.sentSingleDate = false;
     this.isInSelectMode = false;
     this.startDate = null;
     this.endDate = null;
-    this._prevEnd = null;
-    this._prevStart = null;
     this.sendDateCallback(this.startDate, this.endDate);
-    this.highlightSelectedDateRange();
   }
 
   /**
@@ -275,9 +241,10 @@ class Day implements IDay {
    * Compare the time between two Day instances.
    * @param dayOne Day instance one
    * @param dayTwo Day instance two
-   * @returns -1 if dayOne is greater than dayTwo, 1 if dayTwo is greater, 0 if they are equal.
+   * @returns return -1 if dayOne is greater than dayTwo, 1 if dayTwo is greater, 0 if they are equal.
    */
   static CompareDays(dayOne: IDay, dayTwo: IDay) {
+    if (dayOne === null || dayTwo === null) return undefined;
     let dayOneTime = dayOne.toDate().getTime();
     let dayTwoTime = dayTwo.toDate().getTime();
     return dayOneTime > dayTwoTime ? -1 : dayTwoTime > dayOneTime ? 1 : 0;
