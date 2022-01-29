@@ -121,6 +121,13 @@ export default class DatePicker {
   }
 
   /**
+   * @returns The HTML layout for the date picker
+   */
+  getLayout() {
+    return this.pickerElemContainer;
+  }
+
+  /**
    * Decide if conditions for triggering the callback to send the date values is meet.
    */
   triggerDateCallback() {

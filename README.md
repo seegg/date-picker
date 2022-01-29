@@ -4,7 +4,7 @@
 
 ### create a new Date Picker:
 
-let datePicker = new DatePicker(Date, Callback)
+`const datePicker = new DatePicker(Date, Callback)`
 
 The constructor accepts a Date object and a callback function as arguments. The start date and the end date selected from the date picker is passed to the callback. 
 
