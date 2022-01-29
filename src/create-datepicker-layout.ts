@@ -161,7 +161,7 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   dayEle.onpointerdown = (evt) => {
     if (evt.button === 2) return;
     datePicker.isInSelectMode = true;
-    datePicker.sentSingDate = false;
+    // datePicker.sentSingDate = false;
     datePicker.setStartDateRange(index)
   };
   //only select dates on pointer move event if picker is in select mode.
