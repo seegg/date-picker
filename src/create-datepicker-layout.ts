@@ -4,7 +4,6 @@ const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', '
 const daysOfTheWeek = ['S', 'M', 'T', 'W', 'T', 'F', 'S'];
 const arrowSymbols = ['<', '>'];
 
-
 /**
  * create the html layout for the date picker.
  * @param datePicker current date picker instance
@@ -51,6 +50,7 @@ export const createDatePickerElem = (datePicker: DatePicker) => {
     daysContainer.appendChild(weekElem);
   }
   pickerElem.appendChild(daysContainer);
+  disableHoverOnTouch(pickerElem);
   return pickerElem;
 
 };
@@ -194,3 +194,28 @@ const createDayElem = (datePicker: DatePicker, index: number) => {
   dayEle.appendChild(dateNumElem);
   return dayEle;
 };
+
+/**
+ * Enable and disabled hover effects by adding and removing a class from parent container.
+ * @param container HTMLElement parent node containing all the elements that is to be checked.
+ */
+const disableHoverOnTouch = (container: HTMLElement): void => {
+  let lastTouchTime = 0;
+
+  const enableHover = () => {
+    if (new Date().getTime() - lastTouchTime < 500) return
+    container.classList.add('hasHover')
+  }
+
+  const disableHover = () => {
+    container.classList.remove('hasHover')
+  }
+
+  const updateLastTouchTime = () => {
+    lastTouchTime = new Date().getTime();
+  }
+
+  document.addEventListener('touchstart', updateLastTouchTime, true)
+  document.addEventListener('touchstart', disableHover, true)
+  document.addEventListener('mousemove', enableHover, true)
+}
