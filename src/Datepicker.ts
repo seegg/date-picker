@@ -1,6 +1,7 @@
 import './style.css';
 
 import { createDatePickerLayout } from './datepicker-layout';
+import { resetDate } from './util';
 interface IDay {
   date: number,
   dayOfWeek: number,
@@ -14,7 +15,6 @@ type DateCallbackFn = (startDate: Date | null, endDate: Date | null) => void;
 export default class DatePicker {
   id: number;
   fullDate: Date;
-  month: number;
   year: number;
   daysInMonth: IDay[] = [];
   initialSelectedDate: IDay | null = null;
@@ -36,9 +36,8 @@ export default class DatePicker {
     DatePicker.baseID++;
     this.fullDate = date;
     this.sendDateCallback = callback;
-    this.month = date.getMonth();
     this.year = date.getFullYear();
-    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.fullDate.getMonth());
     this.pickerElem = createDatePickerLayout(this);
     this.pickerElemContainer = document.createElement('div');
     this.pickerElemContainer.id = 'date-picker-container-' + this.id;
@@ -75,6 +74,10 @@ export default class DatePicker {
     return target.getTime() >= start.getTime() && target.getTime() <= end.getTime();
   }
 
+  get month() {
+    return this.fullDate.getMonth();
+  }
+
   /**
    * Set the year value for the Date picker, redraws the layout.
    * @param year 
@@ -82,10 +85,9 @@ export default class DatePicker {
   setYear(year: number) {
     if (this.year === year) return;
     this.year = year;
-    const newDate = new Date(this.year, this.month, 1);
-    this.month = newDate.getMonth();
+    const newDate = resetDate(this.fullDate);
     this.year = newDate.getFullYear();
-    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.fullDate.getMonth());
     const newPickerElem = createDatePickerLayout(this);
     this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
     this.pickerElem = newPickerElem;
@@ -98,11 +100,10 @@ export default class DatePicker {
    */
   setMonth(month: number) {
     if (this.month === month) return;
-    this.month = month;
-    const newDate = new Date(this.year, this.month, 1);
-    this.month = newDate.getMonth();
+    this.fullDate.setMonth(month);
+    const newDate = resetDate(this.fullDate);
     this.year = newDate.getFullYear();
-    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.fullDate.getMonth());
     const newPickerElem = createDatePickerLayout(this);
     this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
     this.pickerElem = newPickerElem;
