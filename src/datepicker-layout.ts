@@ -129,7 +129,7 @@ const createYearSelect = (datepicker: DatePicker) => {
 
   //transfer focus to the input element.
   yearSelect.onfocus = () => {
-    yearItems.scrollTo(0, 100);
+    scrollToSelectedYear(yearItems, Number(yearInput.value) || null);
     yearInput.focus();
   }
 
@@ -175,6 +175,7 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
     const selectedClass = selectYear === datePicker.year ? 'date-picker-year-select-selected' : 'date-picker-year-select-item';
 
     yearItem.classList.add('date-picker-year-select-item', selectedClass);
+    //pointerdown has priority over blur event.
     yearItem.onpointerdown = (evt) => {
       datePicker.setYear(selectYear);
     }
@@ -202,11 +203,24 @@ const createYearSelectInput = (year: number, max: number = maxYearDefault, min: 
   }
 
   yearInput.onblur = () => {
-
     yearInput.parentElement?.classList.remove('date-picker-year-select-show');
-
   }
   return yearInput;
+}
+
+/**
+ * Scroll to a specific year in the year select menu
+ */
+const scrollToSelectedYear = (yearItems: HTMLDivElement, year: number | null) => {
+  if (year === null) return;
+  try {
+    const firstChildNode = yearItems.firstChild as HTMLDivElement;
+    const yearDifference = year - Number(firstChildNode.innerHTML);
+    const height = firstChildNode.getBoundingClientRect().height;
+    yearItems.scrollTo(0, (yearDifference - 2) * height);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 
