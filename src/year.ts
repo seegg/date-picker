@@ -129,7 +129,7 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
 
   //check the min and min values when adding and subtracting from half of the item count.
   let currentYear = year - Math.floor(itemCount / 2) >= min ? year - Math.floor(itemCount / 2) : min;
-  currentYear = year + Math.ceil(itemCount / 2) <= max ? currentYear : year - itemCount;
+  currentYear = year + Math.ceil(itemCount / 2) <= max ? year : max - itemCount;
 
   for (let i = 0; i <= itemCount; i++) {
     let yearItem = document.createElement('div');
