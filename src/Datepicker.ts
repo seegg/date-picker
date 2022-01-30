@@ -15,7 +15,6 @@ type DateCallbackFn = (startDate: Date | null, endDate: Date | null) => void;
 export default class DatePicker {
   id: number;
   fullDate: Date;
-  year: number;
   daysInMonth: IDay[] = [];
   initialSelectedDate: IDay | null = null;
   startDate: IDay | null = null;
@@ -36,8 +35,7 @@ export default class DatePicker {
     DatePicker.baseID++;
     this.fullDate = date;
     this.sendDateCallback = callback;
-    this.year = date.getFullYear();
-    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.fullDate.getMonth());
+    this.daysInMonth = DatePicker.getDaysInMonth(this.fullDate.getFullYear(), this.fullDate.getMonth());
     this.pickerElem = createDatePickerLayout(this);
     this.pickerElemContainer = document.createElement('div');
     this.pickerElemContainer.id = 'date-picker-container-' + this.id;
@@ -78,16 +76,17 @@ export default class DatePicker {
     return this.fullDate.getMonth();
   }
 
+  get year() {
+    return this.fullDate.getFullYear();
+  }
   /**
    * Set the year value for the Date picker, redraws the layout.
    * @param year 
    */
   setYear(year: number) {
     if (this.year === year) return;
-    this.year = year;
-    const newDate = resetDate(this.fullDate);
-    this.year = newDate.getFullYear();
-    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.fullDate.getMonth());
+    this.fullDate.setFullYear(year);
+    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
     const newPickerElem = createDatePickerLayout(this);
     this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
     this.pickerElem = newPickerElem;
@@ -101,9 +100,7 @@ export default class DatePicker {
   setMonth(month: number) {
     if (this.month === month) return;
     this.fullDate.setMonth(month);
-    const newDate = resetDate(this.fullDate);
-    this.year = newDate.getFullYear();
-    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.fullDate.getMonth());
+    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
     const newPickerElem = createDatePickerLayout(this);
     this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
     this.pickerElem = newPickerElem;
