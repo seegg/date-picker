@@ -66,7 +66,7 @@ const creatNavArrows = (icon: string, callback?: () => void) => {
   let arrow = document.createElement('div');
   arrow.classList.add('date-picker-navArrow');
   arrow.innerHTML = icon;
-  arrow.onclick = () => { callback ? callback() : '' };
+  arrow.onpointerdown = () => { callback ? callback() : '' };
   return arrow;
 }
 
@@ -82,9 +82,17 @@ const createYear = (datePicker: DatePicker) => {
   yearDiv.innerHTML = datePicker.year.toString();
 
   let yearSelect = createYearSelect(datePicker);
+
   yearDiv.appendChild(yearSelect);
 
-  return yearDiv
+  //show and set focus to the year select menu
+  //the select menu will then transfer focus to its input
+  //child element.
+  yearDiv.onclick = () => {
+    yearSelect.classList.toggle('date-picker-year-select-show');
+    yearSelect.focus();
+  }
+  return yearDiv;
 }
 
 /**
@@ -99,21 +107,31 @@ const createYearSelect = (datepicker: DatePicker) => {
   yearInput.value = datepicker.year.toString();
   yearSelect.classList.add('date-picker-year-select');
   yearInput.classList.add('date-picker-year-select-input');
-  yearSelect.tabIndex = 1;
+  yearSelect.tabIndex = -1;
 
+  //debounce function to wait on year input and change
+  //the year selection base on new input.
   const replaceSelection = debounce(updateYearSelectItems);
   //regex for year string 1 to 9999 or empty string
   const yearRegex = /^[1-9][0-9]{0,3}$|(^$)/i;
+
+  //keep track of the last valid value for Input element.
   let currentInputValue = yearInput.value;
-  yearInput.addEventListener('input', (evt) => {
-    console.log('input', yearInput.value);
+
+  yearInput.addEventListener('input', () => {
     if (yearRegex.test(yearInput.value)) {
       currentInputValue = yearInput.value;
       replaceSelection(yearSelect, datepicker, Number(currentInputValue) || '');
     } else {
       yearInput.value = currentInputValue;
     }
-  })
+  });
+
+  //transfer focus to the input element.
+  yearSelect.onfocus = () => {
+    yearItems.scrollTo(0, 100);
+    yearInput.focus();
+  }
 
   yearSelect.appendChild(yearInput);
   yearSelect.appendChild(yearItems);
@@ -152,8 +170,12 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
     //forms a closure for the setYear callback.
     let selectYear = currentYear + i;
     yearItem.innerHTML = selectYear.toString();
-    yearItem.classList.add('date-picker-year-select-item');
-    yearItem.onclick = () => {
+
+    //highlight the item if selectYear is the same as the date picker's current year.
+    const selectedClass = selectYear === datePicker.year ? 'date-picker-year-select-selected' : 'date-picker-year-select-item';
+
+    yearItem.classList.add('date-picker-year-select-item', selectedClass);
+    yearItem.onpointerdown = (evt) => {
       datePicker.setYear(selectYear);
     }
     yearItemContainer.appendChild(yearItem);
@@ -175,6 +197,15 @@ const createYearSelectInput = (year: number, max: number = maxYearDefault, min: 
   yearInput.max = max.toString();
   yearInput.min = min.toString();
   yearInput.step = step.toString();
+  yearInput.onpointerdown = (evt) => {
+    evt.stopPropagation();
+  }
+
+  yearInput.onblur = () => {
+
+    yearInput.parentElement?.classList.remove('date-picker-year-select-show');
+
+  }
   return yearInput;
 }
 

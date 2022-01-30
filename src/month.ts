@@ -33,7 +33,7 @@ export const createMonth = (datePicker: DatePicker, names: string[]) => {
 export const createMonthSelect = (datePicker: DatePicker, names: string[]) => {
   let monthSelect = document.createElement('div');
   monthSelect.classList.add('date-picker-month-select');
-  monthSelect.tabIndex = 0;
+  monthSelect.tabIndex = -2;
   names.forEach((month, idx) => {
     let nameDiv = document.createElement('div');
     nameDiv.classList.add('date-picker-month-select-name');

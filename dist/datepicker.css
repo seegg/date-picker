@@ -61,17 +61,14 @@
 }
 
 .date-picker-days-container{
-  
   border-radius: 2px;
 }
 
 .date-picker-long-select{
-  
   outline: var(--outline-long-select);
 }
 
 .date-picker-label{
-  
   width: var(--label-width);
   height: var(--label-height);
   display: flex;
@@ -82,19 +79,16 @@
 }
 
 .date-picker-day{
-  
   background-color: var(--label-date-bg);
   border-radius: 3px;
   outline: none;
 }
 
 .date-picker.hasHover .date-picker-day:hover{
-  
   box-shadow: var(--label-box-shadow-hover);
 }
 
 .date-picker-month{
-  
   width: 50px;
   height: 35px;
   display: flex;
@@ -105,7 +99,6 @@
 }
 
 .date-picker-year{
-  
   width: 50px;
   height: 35px;
   display: flex;
@@ -116,7 +109,6 @@
 }
 
 .date-picker-week{
-  
   display: flex;
   margin: 1px;
   margin-left: 1px;
@@ -124,40 +116,33 @@
 }
 
 .day-of-week-label{
-  
   border-radius: 10%;
   font-size: 1rem;
   margin: 1px;
 }
 
 .day-of-week-sun{
-  
   color: var(--label-sunday-colour);
 }
 
 .date-picker.hasHover .day-of-week-label:hover{
-  
   outline: none;
 }
 
 .not-current-month{
-  
   color: var(--label-not-current-font-colour);
   background-color: var(--label-not-current-bg);
 }
 
 .day-selected{
-  
   background-color: var(--label-date-selected-bg);
 }
 
 .date-picker.hasHover .day-selected:hover{
-  
   background-color: var(--label-date-selected-bg-hover);
 }
 
 .date-picker-navHeader{
-  
   height: 40px;
   width: 100%;
   display: flex;
@@ -167,7 +152,6 @@
 }
 
 .date-picker-navArrow{
-  
   font-size: 1rem;
   width: 35px;
   height: 35px;
@@ -181,13 +165,12 @@
   transition: font-size 0.1s ease-in-out;
 }
 
-.date-picker.hasHover .date-picker-navArrow:hover{
-  
+.date-picker.hasHover .date-picker-navArrow:hover{ 
   font-size: 1.5rem;
 }
 
 .date-picker-month-select{
-  
+
   width: var(--month-select-width);
   height: var(--month-select-height);
   left: 50%;
@@ -209,12 +192,10 @@
 }
 
 .date-picker-month-select::-webkit-scrollbar{
-  
   display: none;  /* Safari and Chrome */
 }
 
 .date-picker-month-select-show{
-  
   display: flex;
 }
 
@@ -247,7 +228,7 @@
   top: 35px;
   box-shadow: var(--month-select-box-shadow);
   transform: translateX(-50%);
-  display: flex;
+  display: none;
   flex-direction: column;
   position: absolute;
   background-color: whitesmoke;
@@ -294,8 +275,16 @@
   box-sizing: border-box;
 }
 
+.date-picker-year-select-show{
+  display: flex;
+}
+
 .date-picker.hasHover .date-picker-year-select-item:hover{
   background-color: var(--month-select-month-hover-bg);
+}
+
+.date-picker-year-select-selected{
+  background-color: var(--month-select-selected-month);
 }
 
 
