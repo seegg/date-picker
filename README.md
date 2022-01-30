@@ -8,9 +8,7 @@ The constructor accepts a Date object and a callback function as arguments. The 
 
 ```
 const datePicker = new DatePicker(Date, Callback)
-```
 
-```
 const callback = (startDate, endDate)=>{/* do stuff */}
 ```
 
