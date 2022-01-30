@@ -43,8 +43,9 @@ const createDay = (datePicker: DatePicker, index: number) => {
   const date = datePicker.daysInMonth[index];
   dayEle.classList.add('date-picker-day', 'date-picker-label');
 
+
+  //event listeners
   dayEle.oncontextmenu = () => {
-    console.log(datePicker.isInMultiMonthSelectMode);
     datePicker.setMultiMonthDateRange(index);
   };
 

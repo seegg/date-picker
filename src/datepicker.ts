@@ -13,6 +13,7 @@ type DateCallbackFn = (startDate: Date | null, endDate: Date | null) => void;
 
 export default class DatePicker {
   id: number;
+  fullDate: Date;
   month: number;
   year: number;
   daysInMonth: IDay[] = [];
@@ -33,6 +34,7 @@ export default class DatePicker {
   constructor(date: Date, callback: DateCallbackFn) {
     this.id = DatePicker.baseID;
     DatePicker.baseID++;
+    this.fullDate = date;
     this.sendDateCallback = callback;
     this.month = date.getMonth();
     this.year = date.getFullYear();

@@ -108,11 +108,10 @@ const createYearSelect = (datepicker: DatePicker) => {
   yearInput.addEventListener('input', (evt) => {
     console.log('input', yearInput.value);
     if (yearRegex.test(yearInput.value)) {
-      if (yearInput.value === '') console.log(yearInput.innerText, yearInput.innerHTML);
       currentInputValue = yearInput.value;
+      replaceSelection(yearSelect, datepicker, Number(currentInputValue) || '');
     } else {
       yearInput.value = currentInputValue;
-
     }
   })
 
@@ -127,8 +126,8 @@ const createYearSelect = (datepicker: DatePicker) => {
  * @param datePicker 
  * @param year updated year.
  */
-const updateYearSelectItems = (parentElem: HTMLDivElement, datePicker: DatePicker, year: number) => {
-  let updatedItems = createYearSelectItems(datePicker, year);
+const updateYearSelectItems = (parentElem: HTMLDivElement, datePicker: DatePicker, year: number | '') => {
+  let updatedItems = year ? createYearSelectItems(datePicker, year) : document.createElement('div');
   parentElem.replaceChild(updatedItems, parentElem.childNodes[1]);
 }
 
