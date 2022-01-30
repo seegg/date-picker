@@ -6,7 +6,7 @@ const arrowSymbols = ['<', '>'];
 
 //values for year select input element
 const maxYearDefault = 9999;
-const minYearDefault = 0;
+const minYearDefault = 1;
 const stepDefault = 3;
 
 /**
@@ -125,7 +125,7 @@ const createMonth = (datePicker: DatePicker, names = months) => {
 }
 
 /**
- * Create the element to display month select on click.
+ * Create the menu for selecing a specific month.
  * @param datePicker Current instance of DatePicker
  * @param names Names of the month
  * @returns Div Element for dispalying month select.
@@ -167,17 +167,34 @@ const createYear = (datePicker: DatePicker) => {
   return yearDiv
 }
 
-
+/**
+ * create the year selection menu.
+ * @param datepicker DatePicker instance
+ * @returns Year selection menu
+ */
 const createYearSelect = (datepicker: DatePicker) => {
   let yearSelect = document.createElement('div');
   let yearInput = createYearSelectInput(datepicker.year);
   let yearItems = createYearSelectItems(datepicker, datepicker.year);
   yearInput.value = datepicker.year.toString();
-
-
   yearSelect.classList.add('date-picker-year-select');
   yearInput.classList.add('date-picker-year-select-input');
   yearSelect.tabIndex = 1;
+
+  const replaceSelection = debounce(updateYearSelectItems);
+  //regex for year string 1 to 9999 or empty string
+  const yearRegex = /^[1-9][0-9]{0,3}$|(^$)/i;
+  let currentInputValue = yearInput.value;
+  yearInput.addEventListener('input', (evt) => {
+    console.log('input', yearInput.value);
+    if (yearRegex.test(yearInput.value)) {
+      if (yearInput.value === '') console.log(yearInput.innerText, yearInput.innerHTML);
+      currentInputValue = yearInput.value;
+    } else {
+      yearInput.value = currentInputValue;
+
+    }
+  })
 
   yearSelect.appendChild(yearInput);
   yearSelect.appendChild(yearItems);
@@ -185,24 +202,18 @@ const createYearSelect = (datepicker: DatePicker) => {
 }
 
 /**
- * Create the input element for year select.
- * @param year Initial value
- * @param max number input max
- * @param min number input min
- * @param step number input step
- * @returns 
+ * Updates the years on the year selection menu
+ * @param parentElem menu container
+ * @param datePicker 
+ * @param year updated year.
  */
-const createYearSelectInput = (year: number, max: number = maxYearDefault, min: number = minYearDefault, step: number = stepDefault) => {
-  let yearInput = document.createElement('input');
-  yearInput.type = 'number';
-  yearInput.max = max.toString();
-  yearInput.min = min.toString();
-  yearInput.step = step.toString();
-  return yearInput;
+const updateYearSelectItems = (parentElem: HTMLDivElement, datePicker: DatePicker, year: number) => {
+  let updatedItems = createYearSelectItems(datePicker, year);
+  parentElem.replaceChild(updatedItems, parentElem.childNodes[1]);
 }
 
 /**
- * create the year selection items 
+ * create menu items for selecting a year.
  * @param datePicker instance of DatePicker
  * @param year 
  * @param max max year for selection
@@ -229,6 +240,23 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
     yearItemContainer.appendChild(yearItem);
   }
   return yearItemContainer;
+}
+
+/**
+ * Create the input element for year select.
+ * @param year Initial value
+ * @param max number input max
+ * @param min number input min
+ * @param step number input step
+ * @returns 
+ */
+const createYearSelectInput = (year: number, max: number = maxYearDefault, min: number = minYearDefault, step: number = stepDefault) => {
+  let yearInput = document.createElement('input');
+  yearInput.type = 'text';
+  yearInput.max = max.toString();
+  yearInput.min = min.toString();
+  yearInput.step = step.toString();
+  return yearInput;
 }
 
 
@@ -323,7 +351,7 @@ const disableHoverOnTouch = (container: HTMLElement): void => {
   document.addEventListener('mousemove', enableHover, true);
 }
 
-function debounce(callback: () => void, wait: number = 300) {
+function debounce(callback: (...param: any) => void, wait: number = 300) {
   let timer: NodeJS.Timeout;
   return function (...args: any) {
     clearTimeout(timer);
