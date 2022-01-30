@@ -15,7 +15,7 @@ const secondDisplay = document.createElement('div');
 // secondDisplay.style.width = '200px';
 secondDisplay.style.height = '50px';
 
-let picker2 = new DatePicker(new Date(-5000000000000), (start, end) => {
+let picker2 = new DatePicker(new Date(), (start, end) => {
   if (start && end) {
     secondDisplay.innerHTML = `start: ${formatDate(start)} end: ${formatDate(end)}`;
   } else {

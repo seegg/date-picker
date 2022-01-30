@@ -168,6 +168,14 @@ const createYearSelect = (datepicker: DatePicker) => {
   return yearSelect;
 }
 
+/**
+ * Create the input element for year select.
+ * @param year Initial value
+ * @param max number input max
+ * @param min number input min
+ * @param step number input step
+ * @returns 
+ */
 const createYearSelectInput = (year: number, max: number = maxYearDefault, min: number = minYearDefault, step: number = stepDefault) => {
   let yearInput = document.createElement('input');
   yearInput.type = 'number';
@@ -177,12 +185,25 @@ const createYearSelectInput = (year: number, max: number = maxYearDefault, min: 
   return yearInput;
 }
 
-const createYearSelectItems = (datePicker: DatePicker, year: number, numberOfItems: number = 10) => {
+/**
+ * create the year selection items 
+ * @param datePicker instance of DatePicker
+ * @param year 
+ * @param max max year for selection
+ * @param min min year for selection
+ * @param numberOfItems the number of years to generate for selection.
+ * @returns 
+ */
+const createYearSelectItems = (datePicker: DatePicker, year: number, max: number = maxYearDefault, min: number = minYearDefault, numberOfItems: number = 10) => {
   let yearItemContainer = document.createElement('div');
+  let itemCount = max - min >= numberOfItems ? numberOfItems : max - min;
   yearItemContainer.classList.add('date-picker-year-select-item-container');
-  let currentYear = year - 5 >= 0 ? year - 5 : 0;
-  for (let i = 0; i < 10; i++) {
+  //check the min and min values when adding and subtracting from half of the item count.
+  let currentYear = year - Math.floor(itemCount / 2) >= min ? year - Math.floor(itemCount / 2) : min;
+  currentYear = year + Math.ceil(itemCount / 2) <= max ? currentYear : year - itemCount;
+  for (let i = 0; i <= itemCount; i++) {
     let yearItem = document.createElement('div');
+    //forms a closure for the setYear callback.
     let selectYear = currentYear + i;
     yearItem.innerHTML = selectYear.toString();
     yearItem.classList.add('date-picker-year-select-item');
