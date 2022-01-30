@@ -289,10 +289,8 @@ class Day implements IDay {
    * @returns Date object representing the Day instance.
    */
   toDate(): Date {
-    let date = new Date();
+    let date = new Date(this.year, this.month, this.date);
     date.setFullYear(this.year);
-    date.setMonth(this.month);
-    date.setDate(this.date);
     return date;
   }
 }
