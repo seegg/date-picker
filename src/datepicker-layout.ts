@@ -1,4 +1,6 @@
 import DatePicker from "./datepicker";
+import { createDatesInMonth } from "./date";
+import { createMonth } from "./month";
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const daysOfTheWeek = ['S', 'M', 'Tu', 'W', 'Th', 'F', 'S'];
@@ -28,7 +30,7 @@ export const createDatePickerLayout = (datePicker: DatePicker) => {
   //can't pass white space or empty strings as parameter.
   pickerElem.classList.add('date-picker', `${datePicker.isInMultiMonthSelectMode ? 'date-picker-long-select' : 'date-picker'}`);
 
-  let monthDiv = createMonth(datePicker);
+  let monthDiv = createMonth(datePicker, months);
   let yearDiv = createYear(datePicker);
   let rightArrow = creatNavArrows(arrowSymbols[0], (datePicker.prevMonth.bind(datePicker)));
   let leftArrow = creatNavArrows(arrowSymbols[1], datePicker.nextMonth.bind(datePicker));
@@ -55,39 +57,6 @@ export const createDatePickerLayout = (datePicker: DatePicker) => {
 
 
 /**
- * Create the dates for the month.
- * @param datePicker DatePicker instance.
- * @returns HTMLDivElement container holding the dates for the month.
- */
-const createDatesInMonth = (datePicker: DatePicker) => {
-  //container to hold the dates in the month. add an id to
-  //change outline colour depending if it's in multi month select mode
-  //or not.
-  let daysContainer = document.createElement('div');
-  daysContainer.id = 'days-container-' + datePicker.id;
-  daysContainer.classList.add('date-picker-days-container');
-  if (datePicker.isInMultiMonthSelectMode) {
-    daysContainer.classList.add('date-picker-long-select');
-  }
-
-  //The dates are group into weeks which is then group together
-  //in the daysContainer.
-  for (let i = 0; i < 6; i++) {
-    let weekElem = document.createElement('div');
-    weekElem.classList.add('date-picker-week');
-
-    for (let j = 0; j < 7; j++) {
-      let dayElem = createDay(datePicker, i * 7 + j);
-      weekElem.appendChild(dayElem);
-    }
-    daysContainer.appendChild(weekElem);
-  }
-
-  return daysContainer;
-}
-
-
-/**
  * Create the month navigation elements.
  * @param icon The string for the left and right navigation for the month.
  * @param callback onclick callback.
@@ -99,55 +68,6 @@ const creatNavArrows = (icon: string, callback?: () => void) => {
   arrow.innerHTML = icon;
   arrow.onclick = () => { callback ? callback() : '' };
   return arrow;
-}
-
-/**
- * Create the element to display the month's name.
- * @param datePicker Current instance of DatePicker
- * @param names Names of the month
- * @returns Div Element for dispalying month name.
- */
-const createMonth = (datePicker: DatePicker, names = months) => {
-  let monthDiv = document.createElement('div');
-  let monthSelect = createMonthSelect(datePicker, names);
-  monthDiv.id = 'picker-' + datePicker.id + '-month';
-  monthDiv.classList.add('date-picker-month');
-  monthDiv.innerHTML = names[datePicker.month];
-  monthDiv.appendChild(monthSelect);
-
-  monthDiv.onclick = () => {
-    monthSelect.classList.add('date-picker-month-select-show')
-    const chileElemHeight = monthSelect.firstElementChild?.getBoundingClientRect().height;
-    monthSelect?.scrollTo(0, chileElemHeight! * (datePicker.month - 1) || 0);
-    monthSelect?.focus();
-  }
-  return monthDiv;
-}
-
-/**
- * Create the menu for selecing a specific month.
- * @param datePicker Current instance of DatePicker
- * @param names Names of the month
- * @returns Div Element for dispalying month select.
- */
-const createMonthSelect = (datePicker: DatePicker, names = months) => {
-  let monthSelect = document.createElement('div');
-  monthSelect.classList.add('date-picker-month-select');
-  monthSelect.tabIndex = 0;
-  names.forEach((month, idx) => {
-    let nameDiv = document.createElement('div');
-    nameDiv.classList.add('date-picker-month-select-name');
-    if (idx % 2 !== 0) nameDiv.classList.add('date-picker-month-name-alt');
-    if (idx === datePicker.month) nameDiv.classList.add('date-picker-month-select-selected')
-    nameDiv.innerHTML = month;
-    nameDiv.onclick = () => { datePicker.setMonth(idx) };
-    monthSelect.appendChild(nameDiv);
-  })
-  monthSelect.onblur = () => {
-    monthSelect.classList.remove('date-picker-month-select-show');
-  }
-
-  return monthSelect;
 }
 
 /**
@@ -280,51 +200,7 @@ const createWeekLabel = (weekLabel: string[] = daysOfTheWeek) => {
   return weekLabelDiv;
 }
 
-/**
- * Create the element for Day object.
- * @param datePicker current datePicker instance.
- * @param index index number of daysInMonth property from datePicker instance.
- * @returns HTMLDivElement for the selected date.
- */
-const createDay = (datePicker: DatePicker, index: number) => {
-  let dayEle = document.createElement('div');
-  const date = datePicker.daysInMonth[index];
-  dayEle.classList.add('date-picker-day', 'date-picker-label');
 
-  dayEle.oncontextmenu = () => {
-    console.log(datePicker.isInMultiMonthSelectMode);
-    datePicker.setMultiMonthDateRange(index);
-  };
-
-  dayEle.onpointerdown = (evt) => {
-    if (evt.button === 2) return;
-
-    if (datePicker.isInMultiMonthSelectMode) {
-      datePicker.setMultiMonthDateRange(index);
-    } else {
-      datePicker.isInSelectMode = true;
-      datePicker.setStartDateRange(index)
-    }
-  };
-  //only select dates on pointer move event if picker is in select mode.
-  dayEle.onpointermove = (evt) => {
-    evt.preventDefault();
-    if (datePicker.isInSelectMode) {
-      datePicker.setEndDateRange(index)
-    }
-  };
-
-  dayEle.onpointerup = (evt) => {
-    evt.stopPropagation();
-    datePicker.setEndDateRange(index)
-    datePicker.setSelectMode(false);
-  };
-  if (date.month !== datePicker.month) dayEle.classList.add('not-current-month');
-  let dateNumElem = document.createElement('p');
-  dateNumElem.innerHTML = date.date.toString();
-  dayEle.appendChild(dateNumElem);
-  return dayEle;
-};
 
 /**
  * Enable and disabled hover effects by adding and removing a class from parent container.
