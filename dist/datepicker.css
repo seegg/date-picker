@@ -222,6 +222,7 @@
 }
 
 .date-picker-year-select{
+  outline: solid 2px red;
   width: 100px;
   height: 200px;
   left: 50%;

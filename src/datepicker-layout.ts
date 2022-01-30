@@ -89,7 +89,7 @@ const createYear = (datePicker: DatePicker) => {
   //the select menu will then transfer focus to its input
   //child element.
   yearDiv.onclick = () => {
-    yearSelect.classList.toggle('date-picker-year-select-show');
+    yearSelect.classList.add('date-picker-year-select-show');
     yearSelect.focus();
   }
   return yearDiv;
@@ -127,9 +127,23 @@ const createYearSelect = (datepicker: DatePicker) => {
     }
   });
 
+
+  //check if the blur event is from seleting another element
+  //inside the parent element do nothing if that's the case.
+  yearInput.onblur = (evt) => {
+    if (yearSelect.contains(evt.relatedTarget as HTMLElement)) return;
+    yearSelect.classList.remove('date-picker-year-select-show');
+    //reset the year select menu with default values.
+    updateYearSelectItems(yearSelect, datepicker, datepicker.year);
+  }
+
   //transfer focus to the input element.
   yearSelect.onfocus = () => {
-    scrollToSelectedYear(yearItems, Number(yearInput.value) || null);
+    yearInput.value = datepicker.year.toString();
+    yearInput.dispatchEvent(new Event('input'));
+
+    // debounce(scrollToSelectedYear, 50)(yearItems, Number(yearInput.value) || null);
+    scrollToSelectedYear(yearSelect, Number(yearInput.value) || null);
     yearInput.focus();
   }
 
@@ -144,9 +158,26 @@ const createYearSelect = (datepicker: DatePicker) => {
  * @param datePicker 
  * @param year updated year.
  */
-const updateYearSelectItems = (parentElem: HTMLDivElement, datePicker: DatePicker, year: number | '') => {
+const updateYearSelectItems = (parentElem: HTMLDivElement, datePicker: DatePicker, year: number | null) => {
   let updatedItems = year ? createYearSelectItems(datePicker, year) : document.createElement('div');
   parentElem.replaceChild(updatedItems, parentElem.childNodes[1]);
+  scrollToSelectedYear(parentElem, year || null);
+}
+
+/**
+ * Scroll to a specific year in the year select menu
+ */
+const scrollToSelectedYear = (yearSelect: HTMLDivElement, year: number | null) => {
+  if (year === null) return;
+  try {
+    const yearItems = yearSelect.childNodes[1] as HTMLDivElement;
+    const firstChildNode = yearItems.firstChild as HTMLDivElement;
+    const yearDifference = year - Number(firstChildNode.innerHTML);
+    const height = firstChildNode.getBoundingClientRect().height;
+    yearItems.scrollTo(0, (yearDifference - 2) * height);
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 /**
@@ -158,29 +189,37 @@ const updateYearSelectItems = (parentElem: HTMLDivElement, datePicker: DatePicke
  * @param numberOfItems the number of years to generate for selection.
  * @returns 
  */
-const createYearSelectItems = (datePicker: DatePicker, year: number, max: number = maxYearDefault, min: number = minYearDefault, numberOfItems: number = 10) => {
+const createYearSelectItems = (datePicker: DatePicker, year: number, max: number = maxYearDefault,
+  min: number = minYearDefault, numberOfItems: number = 10) => {
+
   let yearItemContainer = document.createElement('div');
   let itemCount = max - min >= numberOfItems ? numberOfItems : max - min;
   yearItemContainer.classList.add('date-picker-year-select-item-container');
+
   //check the min and min values when adding and subtracting from half of the item count.
   let currentYear = year - Math.floor(itemCount / 2) >= min ? year - Math.floor(itemCount / 2) : min;
   currentYear = year + Math.ceil(itemCount / 2) <= max ? currentYear : year - itemCount;
+
   for (let i = 0; i <= itemCount; i++) {
     let yearItem = document.createElement('div');
+    yearItem.tabIndex = -(i + 100);
+
     //forms a closure for the setYear callback.
     let selectYear = currentYear + i;
     yearItem.innerHTML = selectYear.toString();
 
     //highlight the item if selectYear is the same as the date picker's current year.
-    const selectedClass = selectYear === datePicker.year ? 'date-picker-year-select-selected' : 'date-picker-year-select-item';
+    const selectedClass = selectYear === year ?
+      'date-picker-year-select-selected' : 'date-picker-year-select-item';
 
     yearItem.classList.add('date-picker-year-select-item', selectedClass);
-    //pointerdown has priority over blur event.
-    yearItem.onpointerdown = (evt) => {
+
+    yearItem.onclick = () => {
       datePicker.setYear(selectYear);
     }
     yearItemContainer.appendChild(yearItem);
   }
+
   return yearItemContainer;
 }
 
@@ -192,37 +231,17 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
  * @param step number input step
  * @returns 
  */
-const createYearSelectInput = (year: number, max: number = maxYearDefault, min: number = minYearDefault, step: number = stepDefault) => {
+const createYearSelectInput = (year: number, max: number = maxYearDefault,
+  min: number = minYearDefault, step: number = stepDefault) => {
+
   let yearInput = document.createElement('input');
   yearInput.type = 'text';
   yearInput.max = max.toString();
   yearInput.min = min.toString();
   yearInput.step = step.toString();
-  yearInput.onpointerdown = (evt) => {
-    evt.stopPropagation();
-  }
 
-  yearInput.onblur = () => {
-    yearInput.parentElement?.classList.remove('date-picker-year-select-show');
-  }
   return yearInput;
 }
-
-/**
- * Scroll to a specific year in the year select menu
- */
-const scrollToSelectedYear = (yearItems: HTMLDivElement, year: number | null) => {
-  if (year === null) return;
-  try {
-    const firstChildNode = yearItems.firstChild as HTMLDivElement;
-    const yearDifference = year - Number(firstChildNode.innerHTML);
-    const height = firstChildNode.getBoundingClientRect().height;
-    yearItems.scrollTo(0, (yearDifference - 2) * height);
-  } catch (err) {
-    console.log(err);
-  }
-}
-
 
 /**
  * Create the element to display the names for the days of the week.
