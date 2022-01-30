@@ -51,6 +51,7 @@ export default class DatePicker {
    */
   static GetDaysInMonth(year: number, month: number): IDay[] {
     let currentDate = new Date(year, month, 1);
+    currentDate.setFullYear(year);
     let currentDayOfWeek = currentDate.getDay();
     currentDate.setDate(currentDate.getDate() - currentDayOfWeek);
     let days: IDay[] = [];
@@ -264,6 +265,7 @@ class Day implements IDay {
   year: number;
   constructor(year: number, month: number, date: number) {
     let tempDate = new Date(year, month, date);
+    tempDate.setFullYear(year);
     this.year = year;
     this.date = tempDate.getDate();
     this.dayOfWeek = tempDate.getDay();
@@ -287,6 +289,10 @@ class Day implements IDay {
    * @returns Date object representing the Day instance.
    */
   toDate(): Date {
-    return new Date(this.year, this.month, this.date);
+    let date = new Date();
+    date.setFullYear(this.year);
+    date.setMonth(this.month);
+    date.setDate(this.date);
+    return date;
   }
 }
