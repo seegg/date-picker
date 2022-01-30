@@ -10,6 +10,11 @@ interface IDay {
   toDate: () => Date
 }
 
+interface IPickerView {
+  container: HTMLDivElement,
+  layout: HTMLDivElement,
+}
+
 type DateCallbackFn = (startDate: Date | null, endDate: Date | null) => void;
 
 export default class DatePicker {
@@ -22,8 +27,7 @@ export default class DatePicker {
   isSameDateValues = true;
   isInSelectMode: boolean = false;
   isInMultiMonthSelectMode: boolean = false;
-  pickerElem: HTMLDivElement;
-  pickerElemContainer: HTMLDivElement;
+  pickerView: IPickerView;
   sendDateCallback: DateCallbackFn;
   static baseID = 1;
   /**
@@ -36,15 +40,11 @@ export default class DatePicker {
     this.fullDate = date;
     this.sendDateCallback = callback;
     this.daysInMonth = DatePicker.getDaysInMonth(this.fullDate.getFullYear(), this.fullDate.getMonth());
-    this.pickerElem = createDatePickerLayout(this);
-    this.pickerElemContainer = document.createElement('div');
-    this.pickerElemContainer.id = 'date-picker-container-' + this.id;
-    this.pickerElemContainer.classList.add('date-picker-container');
-    this.pickerElemContainer.appendChild(this.pickerElem);
+    this.pickerView = createDatePickerLayout(this);
   }
 
   /**
-   * 
+   * Generate the Day objects relating to the days in the month.
    * @param year selected year.
    * @param month selected month.
    * @returns a list of 35 dates starting from monday of the selected week to sunday 5 weeks after.
@@ -68,7 +68,7 @@ export default class DatePicker {
    * @param end the end date of the range
    * @returns boolean value whether target date is in range or not.
    */
-  static checkIfDateIsWithinRange(target: Date, start: Date, end: Date) {
+  static isDateWithinRange(target: Date, start: Date, end: Date) {
     return target.getTime() >= start.getTime() && target.getTime() <= end.getTime();
   }
 
@@ -87,10 +87,8 @@ export default class DatePicker {
     if (this.year === year) return;
     this.fullDate.setFullYear(year);
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
-    const newPickerElem = createDatePickerLayout(this);
-    this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
-    this.pickerElem = newPickerElem;
-    this.highlightSelectedDateRange();
+    const view = createDatePickerLayout(this);
+    this.updateView(view);
   }
 
   /**
@@ -101,9 +99,13 @@ export default class DatePicker {
     if (this.month === month) return;
     this.fullDate.setMonth(month);
     this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
-    const newPickerElem = createDatePickerLayout(this);
-    this.pickerElemContainer.replaceChild(newPickerElem, this.pickerElem);
-    this.pickerElem = newPickerElem;
+    const view = createDatePickerLayout(this);
+    this.updateView(view);
+  }
+
+  updateView(view: IPickerView) {
+    this.pickerView.container.replaceChild(view.layout, this.pickerView.layout);
+    this.pickerView.layout = view.layout;
     this.highlightSelectedDateRange();
   }
 
@@ -124,7 +126,7 @@ export default class DatePicker {
    * @returns The HTML layout for the date picker
    */
   getLayout() {
-    return this.pickerElemContainer;
+    return this.pickerView.container;
   }
 
   /**
@@ -229,7 +231,7 @@ export default class DatePicker {
    * in the selected date range.
    */
   highlightSelectedDateRange() {
-    let dayElems = this.pickerElemContainer.getElementsByClassName('date-picker-day');
+    let dayElems = this.pickerView.container.getElementsByClassName('date-picker-day');
     this.daysInMonth.forEach((day, index) => {
       if (this.isInSelectedRange(day.toDate())) {
         dayElems[index].classList.add('day-selected');
@@ -247,7 +249,7 @@ export default class DatePicker {
   isInSelectedRange(target: Date): boolean {
     if (this.startDate === null || this.endDate === null) return false;
 
-    return DatePicker.checkIfDateIsWithinRange(target, this.startDate.toDate(), this.endDate.toDate());
+    return DatePicker.isDateWithinRange(target, this.startDate.toDate(), this.endDate.toDate());
   }
 
 }
