@@ -1,8 +1,16 @@
-import DatePicker from "./datepicker";
+import DatePicker from "./Datepicker";
 import { createDatesInMonth } from "./date";
 import { createMonth } from "./month";
 import { createYear } from "./year";
 import { disableHoverOnTouch } from "./util";
+
+export interface IPickerConfig {
+  weekname?: [string, string, string, string, string, string, string],
+  arrows?: [string, string],
+  monthname?: [string, string, string, string, string, string, string, string, string, string, string, string],
+  parent?: { elem: HTMLElement, /* stuff */ },
+  sibling?: { elem: HTMLElement, /* stuff */ }
+}
 
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const daysOfTheWeek = ['S', 'M', 'Tu', 'W', 'Th', 'F', 'S'];
@@ -17,19 +25,24 @@ export const minYearDefault = 1;
  * @param datePicker current date picker instance
  * @returns HTMLDivElement layout for current date picker.
  */
-export const createDatePickerLayout = (datePicker: DatePicker) => {
+export const createDatePickerLayout = (datePicker: DatePicker, config?: IPickerConfig | null) => {
 
-  let pickerElem = document.createElement('div');
+  let datePickerContainer = document.createElement('div');
+  datePickerContainer = document.createElement('div');
+  datePickerContainer.id = 'date-picker-container-' + datePicker.id;
+  datePickerContainer.classList.add('date-picker-container');
+
+  let dayPickerLayout = document.createElement('div');
   //event handlers dealing for toggling select mode to false
-  pickerElem.onpointerup = () => {
+  dayPickerLayout.onpointerup = () => {
     datePicker.setSelectMode(false);
   };
-  pickerElem.onpointerleave = () => {
+  dayPickerLayout.onpointerleave = () => {
     datePicker.setSelectMode(false);
   };
 
   //can't pass white space or empty strings as parameter.
-  pickerElem.classList.add('date-picker', `${datePicker.isInMultiMonthSelectMode ? 'date-picker-long-select' : 'date-picker'}`);
+  dayPickerLayout.classList.add('date-picker', `${datePicker.isInMultiMonthSelectMode ? 'date-picker-long-select' : 'date-picker'}`);
 
   let monthDiv = createMonth(datePicker, months);
   let yearDiv = createYear(datePicker);
@@ -43,16 +56,17 @@ export const createDatePickerLayout = (datePicker: DatePicker) => {
   navContainer.appendChild(monthDiv);
   navContainer.appendChild(yearDiv);
   navContainer.appendChild(leftArrow);
-  pickerElem.appendChild(navContainer);
+  dayPickerLayout.appendChild(navContainer);
 
-  pickerElem.appendChild(daysOfWeekLabels);
+  dayPickerLayout.appendChild(daysOfWeekLabels);
 
   let daysContainer = createDatesInMonth(datePicker);
-  pickerElem.appendChild(daysContainer);
+  dayPickerLayout.appendChild(daysContainer);
   //disable context menu
-  pickerElem.oncontextmenu = (e) => { e.preventDefault(); };
-  disableHoverOnTouch(pickerElem);
-  return pickerElem;
+  dayPickerLayout.oncontextmenu = (e) => { e.preventDefault(); };
+  disableHoverOnTouch(dayPickerLayout);
+  datePickerContainer.appendChild(dayPickerLayout);
+  return { container: datePickerContainer, layout: dayPickerLayout };
 
 };
 

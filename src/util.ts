@@ -30,3 +30,16 @@ export function debounce(callback: (...param: any) => void, wait: number = 300) 
     timer = setTimeout(() => { callback.apply(null, args) }, wait);
   }
 }
+
+/**
+ * Helper to create a new Date object with the same values as the input
+ * except the date is set to 1.
+ * @param date 
+ */
+export const resetDate = (date: Date) => {
+  let newDate = new Date()
+  newDate.setFullYear(date.getFullYear());
+  newDate.setMonth(date.getMonth());
+  newDate.setDate(1);
+  return newDate;
+}

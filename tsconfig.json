@@ -6,10 +6,12 @@
     "strict": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "moduleResolution": "node",
     "removeComments": true,
     "lib": [
       "DOM",
       "ES2020"
     ],
+    "target": "ES6"
   }
 }
