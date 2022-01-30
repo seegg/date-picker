@@ -24,7 +24,9 @@ export const createDatePickerLayout = (datePicker: DatePicker) => {
   pickerElem.onpointerleave = () => {
     datePicker.setSelectMode(false);
   };
-  pickerElem.classList.add('date-picker');
+
+  //can't pass white space or empty strings as parameter.
+  pickerElem.classList.add('date-picker', `${datePicker.isInMultiMonthSelectMode ? 'date-picker-long-select' : 'date-picker'}`);
 
   let monthDiv = createMonth(datePicker);
   let yearDiv = createYear(datePicker);
@@ -42,7 +44,22 @@ export const createDatePickerLayout = (datePicker: DatePicker) => {
 
   pickerElem.appendChild(daysOfWeekLabels);
 
+  let daysContainer = createDatesInMonth(datePicker);
+  pickerElem.appendChild(daysContainer);
+  //disable context menu
   pickerElem.oncontextmenu = (e) => { e.preventDefault(); };
+  disableHoverOnTouch(pickerElem);
+  return pickerElem;
+
+};
+
+
+/**
+ * Create the dates for the month.
+ * @param datePicker DatePicker instance.
+ * @returns HTMLDivElement container holding the dates for the month.
+ */
+const createDatesInMonth = (datePicker: DatePicker) => {
   //container to hold the dates in the month. add an id to
   //change outline colour depending if it's in multi month select mode
   //or not.
@@ -65,11 +82,10 @@ export const createDatePickerLayout = (datePicker: DatePicker) => {
     }
     daysContainer.appendChild(weekElem);
   }
-  pickerElem.appendChild(daysContainer);
-  disableHoverOnTouch(pickerElem);
-  return pickerElem;
 
-};
+  return daysContainer;
+}
+
 
 /**
  * Create the month navigation elements.
@@ -217,7 +233,7 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
 
 
 /**
- * 
+ * Create the element to display the names for the days of the week.
  * @param weekLabel array of names corrensponding to day of the week.
  * @returns 
  */
@@ -248,6 +264,7 @@ const createDay = (datePicker: DatePicker, index: number) => {
   dayEle.classList.add('date-picker-day', 'date-picker-label');
 
   dayEle.oncontextmenu = () => {
+    console.log(datePicker.isInMultiMonthSelectMode);
     datePicker.setMultiMonthDateRange(index);
   };
 
@@ -289,21 +306,21 @@ const disableHoverOnTouch = (container: HTMLElement): void => {
   let lastTouchTime = 0;
 
   const enableHover = () => {
-    if (new Date().getTime() - lastTouchTime < 500) return
-    container.classList.add('hasHover')
-  }
+    if (new Date().getTime() - lastTouchTime < 500) return;
+    container.classList.add('hasHover');
+  };
 
   const disableHover = () => {
-    container.classList.remove('hasHover')
-  }
+    container.classList.remove('hasHover');
+  };
 
   const updateLastTouchTime = () => {
     lastTouchTime = new Date().getTime();
-  }
+  };
 
-  document.addEventListener('touchstart', updateLastTouchTime, true)
-  document.addEventListener('touchstart', disableHover, true)
-  document.addEventListener('mousemove', enableHover, true)
+  document.addEventListener('touchstart', updateLastTouchTime, true);
+  document.addEventListener('touchstart', disableHover, true);
+  document.addEventListener('mousemove', enableHover, true);
 }
 
 function debounce(callback: () => void, wait: number = 300) {

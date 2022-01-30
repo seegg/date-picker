@@ -4,15 +4,20 @@
 
 ### create a new Date Picker:
 
+The constructor accepts a Date object and a callback function as arguments. The start date and the end date selected from the date picker is passed to the callback. 
 
 `const datePicker = new DatePicker(Date, Callback)`
 
 
-The constructor accepts a Date object and a callback function as arguments. The start date and the end date selected from the date picker is passed to the callback. 
-
 `const callback = (startDate, endDate)=>{/* do stuff */}`
 
-Get the HTML layout:
+Set a specific month or year. Months are 0 index.
+
+`datePicker.setMonth(2)`
+`datePick.setYear(2002)`
+`datePicker.setDate(new Date())`
+
+Get the HTML layout, returns a HTMLDivElement representing the date picker.
 
 `datePicker.getLayout()`
 

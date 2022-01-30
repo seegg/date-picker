@@ -142,13 +142,14 @@ export default class DatePicker {
 
   /**
    * Set the initial values for initialSelectedDate startDate and endDate
-   * reset date value if it's in the same as previous values.
+   * reset date value if it's in the same range as previous values.
    * @param index The index of the Day object for daysInMonth array.
    */
   setStartDateRange(index: number) {
 
     this.initialSelectedDate = this.daysInMonth[index];
 
+    //Reset all selection if the new start date is within the range of the previous selection.
     if (this.startDate && this.endDate && this.isInSelectedRange(this.initialSelectedDate.toDate())) {
       this.deselectDateRange();
     } else {
@@ -159,7 +160,13 @@ export default class DatePicker {
     this.highlightSelectedDateRange();
   }
 
+  /**
+   * Set the end date for selection.
+   * @param index The index in daysInMonth corresponding to the selected date.
+   * @returns void
+   */
   setEndDateRange(index: number) {
+    //return if no date has been selected or if it's not in select mode.
     if (!this.initialSelectedDate || !this.isInSelectMode) return;
     this.endDate = this.daysInMonth[index];
     //if the endate is before the initial date set the startdate back to the end date
@@ -181,6 +188,7 @@ export default class DatePicker {
   setMultiMonthDateRange(index: number) {
 
     const daysContainer = document.getElementById('days-container-' + this.id);
+    //Select initial values if isInMultiMonthSelectMode is false initially.
     if (!this.isInMultiMonthSelectMode) {
       this.isSameDateValues = false;
       this.initialSelectedDate = this.daysInMonth[index];
@@ -190,6 +198,7 @@ export default class DatePicker {
       this.endDate = this.initialSelectedDate;
       daysContainer?.classList.add('date-picker-long-select');
     } else {
+      //final values.
       daysContainer?.classList.remove('date-picker-long-select');
       this.endDate = this.daysInMonth[index];
       if (Day.CompareDays(this.startDate!, this.endDate)! < 0) {
@@ -198,11 +207,16 @@ export default class DatePicker {
       }
       this.isInMultiMonthSelectMode = false;
     }
+
+    //always trigger callback to send dates.
     this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate());
     this.highlightSelectedDateRange();
     this.isSameDateValues = true;
   }
 
+  /**
+   * reset date range selection.
+   */
   deselectDateRange() {
     this.isInSelectMode = false;
     this.startDate = null;
