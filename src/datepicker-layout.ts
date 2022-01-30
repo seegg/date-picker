@@ -4,6 +4,14 @@ import { createMonth } from "./month";
 import { createYear } from "./year";
 import { disableHoverOnTouch } from "./util";
 
+interface IPickerConfig {
+  weekname?: [string, string, string, string, string, string, string],
+  arrows?: [string, string],
+  monthname?: [string, string, string, string, string, string, string, string, string, string, string, string],
+  parent?: { elem: HTMLElement, /* stuff */ },
+  sibling?: { elem: HTMLElement, /* stuff */ }
+}
+
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const daysOfTheWeek = ['S', 'M', 'Tu', 'W', 'Th', 'F', 'S'];
 const arrowSymbols = ['<', '>'];
@@ -17,7 +25,7 @@ export const minYearDefault = 1;
  * @param datePicker current date picker instance
  * @returns HTMLDivElement layout for current date picker.
  */
-export const createDatePickerLayout = (datePicker: DatePicker, config?: {}) => {
+export const createDatePickerLayout = (datePicker: DatePicker, config?: IPickerConfig | null) => {
 
   let datePickerContainer = document.createElement('div');
   datePickerContainer = document.createElement('div');
