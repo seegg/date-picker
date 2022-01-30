@@ -7,6 +7,7 @@ interface IDay {
   dayOfWeek: number,
   month: number,
   year: number,
+  fullDate: Date,
   toDate: () => Date
 }
 
@@ -259,17 +260,11 @@ export default class DatePicker {
 }
 
 class Day implements IDay {
-  date: number;
-  dayOfWeek: number;
-  month: number;
-  year: number;
+  fullDate: Date;
   constructor(year: number, month: number, date: number) {
     let tempDate = new Date(year, month, date);
     tempDate.setFullYear(year);
-    this.year = year;
-    this.date = tempDate.getDate();
-    this.dayOfWeek = tempDate.getDay();
-    this.month = tempDate.getMonth();
+    this.fullDate = tempDate;
   }
 
   /**
@@ -285,12 +280,26 @@ class Day implements IDay {
     return dayOneTime > dayTwoTime ? -1 : dayTwoTime > dayOneTime ? 1 : 0;
   }
 
+  get year() {
+    return this.fullDate.getFullYear();
+  }
+
+  get month() {
+    return this.fullDate.getMonth();
+  }
+
+  get date() {
+    return this.fullDate.getDate();
+  }
+
+  get dayOfWeek() {
+    return this.fullDate.getDay();
+  }
+
   /**
    * @returns Date object representing the Day instance.
    */
   toDate(): Date {
-    let date = new Date(this.year, this.month, this.date);
-    date.setFullYear(this.year);
-    return date;
+    return this.fullDate;
   }
 }
