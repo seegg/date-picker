@@ -1,4 +1,4 @@
-import DatePicker from './datepicker';
+import DatePicker from './Datepicker';
 
 let picker = new DatePicker(new Date(9999, 2, 1), (start, end) => {
   let input = document.getElementById('date-input') as HTMLInputElement;

@@ -1,4 +1,4 @@
-import DatePicker from "./datepicker";
+import DatePicker from "./Datepicker";
 import { createDatesInMonth } from "./date";
 import { createMonth } from "./month";
 import { createYear } from "./year";

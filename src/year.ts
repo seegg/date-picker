@@ -1,4 +1,4 @@
-import DatePicker from "./datepicker";
+import DatePicker from "./Datepicker";
 import { debounce } from "./util";
 import { maxYearDefault, minYearDefault } from "./datepicker-layout";
 

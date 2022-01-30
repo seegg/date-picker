@@ -1,4 +1,4 @@
-import DatePicker from "./datepicker";
+import DatePicker from "./Datepicker";
 
 /**
  * Create the dates for the month.
