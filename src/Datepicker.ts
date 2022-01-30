@@ -1,6 +1,6 @@
 import './style.css';
 
-import { createDatePickerLayout, IPickerConfig } from './datepicker-layout';
+import { createDatePickerLayout, IPickerConfig, maxYearDefault as maxYear, minYearDefault as minYear } from './datepicker-layout';
 import { resetDate } from './util';
 interface IDay {
   date: number,
@@ -85,7 +85,8 @@ export default class DatePicker {
    */
   setYear(year: number) {
     if (this.year === year) return;
-    this.fullDate.setFullYear(year);
+    let yearTemp = year > maxYear ? maxYear : year < minYear ? minYear : year;
+    this.fullDate.setFullYear(yearTemp);
     this.daysInMonth = DatePicker.GetDaysInMonth(this.year, this.month);
     const view = createDatePickerLayout(this);
     this.updateView(view);
@@ -97,6 +98,8 @@ export default class DatePicker {
    */
   setMonth(month: number) {
     if (this.month === month) return;
+    if (this.fullDate.getFullYear() === maxYear && month > 11) return;
+    if (this.fullDate.getFullYear() === minYear && month < 0) return;
     this.fullDate.setMonth(month);
     this.daysInMonth = DatePicker.GetDaysInMonth(this.year, this.month);
     const view = createDatePickerLayout(this);
