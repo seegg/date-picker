@@ -39,7 +39,7 @@ export default class DatePicker {
     DatePicker.baseID++;
     this.fullDate = date;
     this.sendDateCallback = callback;
-    this.daysInMonth = DatePicker.getDaysInMonth(this.fullDate.getFullYear(), this.fullDate.getMonth());
+    this.daysInMonth = DatePicker.GetDaysInMonth(this.fullDate.getFullYear(), this.fullDate.getMonth());
     this.pickerView = createDatePickerLayout(this);
   }
 
@@ -49,7 +49,7 @@ export default class DatePicker {
    * @param month selected month.
    * @returns a list of 35 dates starting from monday of the selected week to sunday 5 weeks after.
    */
-  static getDaysInMonth(year: number, month: number): IDay[] {
+  static GetDaysInMonth(year: number, month: number): IDay[] {
     let currentDate = new Date(year, month, 1);
     let currentDayOfWeek = currentDate.getDay();
     currentDate.setDate(currentDate.getDate() - currentDayOfWeek);
@@ -68,7 +68,7 @@ export default class DatePicker {
    * @param end the end date of the range
    * @returns boolean value whether target date is in range or not.
    */
-  static isDateWithinRange(target: Date, start: Date, end: Date) {
+  static IsDateWithinRange(target: Date, start: Date, end: Date) {
     return target.getTime() >= start.getTime() && target.getTime() <= end.getTime();
   }
 
@@ -86,7 +86,7 @@ export default class DatePicker {
   setYear(year: number) {
     if (this.year === year) return;
     this.fullDate.setFullYear(year);
-    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+    this.daysInMonth = DatePicker.GetDaysInMonth(this.year, this.month);
     const view = createDatePickerLayout(this);
     this.updateView(view);
   }
@@ -98,7 +98,7 @@ export default class DatePicker {
   setMonth(month: number) {
     if (this.month === month) return;
     this.fullDate.setMonth(month);
-    this.daysInMonth = DatePicker.getDaysInMonth(this.year, this.month);
+    this.daysInMonth = DatePicker.GetDaysInMonth(this.year, this.month);
     const view = createDatePickerLayout(this);
     this.updateView(view);
   }
@@ -249,7 +249,7 @@ export default class DatePicker {
   isInSelectedRange(target: Date): boolean {
     if (this.startDate === null || this.endDate === null) return false;
 
-    return DatePicker.isDateWithinRange(target, this.startDate.toDate(), this.endDate.toDate());
+    return DatePicker.IsDateWithinRange(target, this.startDate.toDate(), this.endDate.toDate());
   }
 
 }
