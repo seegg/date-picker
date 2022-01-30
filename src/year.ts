@@ -91,6 +91,13 @@ const createYearSelect = (datepicker: DatePicker) => {
  */
 const updateYearSelectItems = (parentElem: HTMLDivElement, datePicker: DatePicker, year: number | null) => {
   let updatedItems = year ? createYearSelectItems(datePicker, year) : document.createElement('div');
+  if (year) {
+    updatedItems = createYearSelectItems(datePicker, year);
+  } else {
+    console.log('empty');
+    updatedItems = document.createElement('div');
+    updatedItems.classList.add('date-picker-year-select-empty');
+  }
   parentElem.replaceChild(updatedItems, parentElem.childNodes[1]);
   scrollToSelectedYear(parentElem, year || null);
 }

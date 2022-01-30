@@ -222,7 +222,6 @@
 }
 
 .date-picker-year-select{
-  outline: solid 2px red;
   width: 100px;
   height: 200px;
   left: 50%;
@@ -238,6 +237,7 @@
 }
 
 .date-picker-year-select-input{
+  background-color: beige;
   text-align: center;
   font-weight: 500;
   font-size: 1rem;
@@ -274,6 +274,12 @@
   align-items: center;
   background-color: var(--month-select-month-bg);
   box-sizing: border-box;
+}
+
+.date-picker-year-select-empty{
+  background-color: white;
+  height: 100%;
+  width: 100%;
 }
 
 .date-picker-year-select-show{
