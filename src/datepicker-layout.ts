@@ -4,7 +4,7 @@ import { createMonth } from "./month";
 import { createYear } from "./year";
 import { disableHoverOnTouch } from "./util";
 
-interface IPickerConfig {
+export interface IPickerConfig {
   weekname?: [string, string, string, string, string, string, string],
   arrows?: [string, string],
   monthname?: [string, string, string, string, string, string, string, string, string, string, string, string],

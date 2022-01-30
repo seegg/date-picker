@@ -1,6 +1,6 @@
 import './style.css';
 
-import { createDatePickerLayout } from './datepicker-layout';
+import { createDatePickerLayout, IPickerConfig } from './datepicker-layout';
 import { resetDate } from './util';
 interface IDay {
   date: number,
@@ -34,13 +34,13 @@ export default class DatePicker {
    * @param date Date object
    * @param callback Callback to handle when a date range has been selected, has access to startDate and endDate properties.
    */
-  constructor(date: Date, callback: DateCallbackFn) {
+  constructor(date: Date, callback: DateCallbackFn, config?: IPickerConfig | null) {
     this.id = DatePicker.baseID;
     DatePicker.baseID++;
     this.fullDate = date;
     this.sendDateCallback = callback;
     this.daysInMonth = DatePicker.GetDaysInMonth(this.fullDate.getFullYear(), this.fullDate.getMonth());
-    this.pickerView = createDatePickerLayout(this);
+    this.pickerView = createDatePickerLayout(this, config);
   }
 
   /**
