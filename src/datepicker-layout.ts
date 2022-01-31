@@ -4,6 +4,7 @@ import { createMonth } from "./month";
 import { createYear } from "./year";
 import { disableHoverOnTouch } from "./util";
 
+//options for config, not implemented.
 export interface IPickerConfig {
   weekname?: [string, string, string, string, string, string, string],
   arrows?: [string, string],
@@ -11,10 +12,6 @@ export interface IPickerConfig {
   parent?: { elem: HTMLElement, /* stuff */ },
   sibling?: { elem: HTMLElement, /* stuff */ }
 }
-
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const daysOfTheWeek = ['S', 'M', 'Tu', 'W', 'Th', 'F', 'S'];
-const arrowSymbols = ['<', '>'];
 
 //values for year select input element
 export const maxYearDefault = 9999;
@@ -27,11 +24,15 @@ export const minYearDefault = 1;
  */
 export const createDatePickerLayout = (datePicker: DatePicker, config?: IPickerConfig | null) => {
 
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const daysOfTheWeek = ['S', 'M', 'Tu', 'W', 'Th', 'F', 'S'];
+  const arrowSymbols = ['<', '>'];
+
   let datePickerContainer = document.createElement('div');
   datePickerContainer = document.createElement('div');
   datePickerContainer.id = 'date-picker-container-' + datePicker.id;
-  datePickerContainer.classList.add('date-picker-container');
-
+  datePickerContainer.classList.add('date-picker-container',
+    `${datePicker.isInMultiMonthSelectMode ? 'date-picker-long-select' : 'date-picker-container'}`);
   let dayPickerLayout = document.createElement('div');
   //event handlers dealing for toggling select mode to false
   dayPickerLayout.onpointerup = () => {
@@ -42,13 +43,13 @@ export const createDatePickerLayout = (datePicker: DatePicker, config?: IPickerC
   };
 
   //can't pass white space or empty strings as parameter.
-  dayPickerLayout.classList.add('date-picker', `${datePicker.isInMultiMonthSelectMode ? 'date-picker-long-select' : 'date-picker'}`);
+  dayPickerLayout.classList.add('date-picker');
 
   let monthDiv = createMonth(datePicker, months);
   let yearDiv = createYear(datePicker);
   let rightArrow = creatNavArrows(arrowSymbols[0], (datePicker.prevMonth.bind(datePicker)));
   let leftArrow = creatNavArrows(arrowSymbols[1], datePicker.nextMonth.bind(datePicker));
-  let daysOfWeekLabels = createWeekLabel();
+  let daysOfWeekLabels = createWeekLabel(daysOfTheWeek);
   //add the header elements for the date picker in order.
   let navContainer = document.createElement('div');
   navContainer.classList.add('date-picker-navHeader');
@@ -64,7 +65,7 @@ export const createDatePickerLayout = (datePicker: DatePicker, config?: IPickerC
   dayPickerLayout.appendChild(daysContainer);
   //disable context menu
   dayPickerLayout.oncontextmenu = (e) => { e.preventDefault(); };
-  disableHoverOnTouch(dayPickerLayout);
+  disableHoverOnTouch(datePickerContainer);
   datePickerContainer.appendChild(dayPickerLayout);
   return { container: datePickerContainer, layout: dayPickerLayout };
 
@@ -92,7 +93,7 @@ const creatNavArrows = (icon: string, callback?: () => void) => {
  * @param weekLabel array of names corrensponding to day of the week.
  * @returns 
  */
-const createWeekLabel = (weekLabel: string[] = daysOfTheWeek) => {
+const createWeekLabel = (weekLabel: string[]) => {
   let weekLabelDiv = document.createElement('div');
   weekLabelDiv.classList.add('date-picker-week');
   for (let i = 0; i < 7; i++) {

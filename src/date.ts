@@ -12,9 +12,9 @@ export const createDatesInMonth = (datePicker: DatePicker) => {
   let daysContainer = document.createElement('div');
   daysContainer.id = 'days-container-' + datePicker.id;
   daysContainer.classList.add('date-picker-days-container');
-  if (datePicker.isInMultiMonthSelectMode) {
-    daysContainer.classList.add('date-picker-long-select');
-  }
+  // if (datePicker.isInMultiMonthSelectMode) {
+  //   daysContainer.classList.add('date-picker-long-select');
+  // }
 
   //The dates are group into weeks which is then group together
   //in the daysContainer.
@@ -47,6 +47,7 @@ const createDay = (datePicker: DatePicker, index: number) => {
   //event listeners
   dayEle.oncontextmenu = () => {
     datePicker.setMultiMonthDateRange(index);
+    toggleLongSelect(datePicker);
   };
 
   dayEle.onpointerdown = (evt) => {
@@ -54,6 +55,7 @@ const createDay = (datePicker: DatePicker, index: number) => {
 
     if (datePicker.isInMultiMonthSelectMode) {
       datePicker.setMultiMonthDateRange(index);
+      toggleLongSelect(datePicker);
     } else {
       datePicker.isInSelectMode = true;
       datePicker.setStartDateRange(index)
@@ -73,8 +75,16 @@ const createDay = (datePicker: DatePicker, index: number) => {
     datePicker.setSelectMode(false);
   };
   if (date.month !== datePicker.month) dayEle.classList.add('not-current-month');
-  let dateNumElem = document.createElement('p');
-  dateNumElem.innerHTML = date.date.toString();
-  dayEle.appendChild(dateNumElem);
+  dayEle.innerHTML = date.date.toString();
   return dayEle;
 };
+
+const toggleLongSelect = (datePicker: DatePicker) => {
+  if (datePicker.isInMultiMonthSelectMode) {
+    datePicker.pickerView.container.classList.add('date-picker-long-select')
+    console.log('add');
+  } else {
+    datePicker.pickerView.container.classList.remove('date-picker-long-select');
+    console.log('remove');
+  }
+}

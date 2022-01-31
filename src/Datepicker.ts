@@ -203,10 +203,10 @@ export default class DatePicker {
       this.isInMultiMonthSelectMode = true;
       this.startDate = this.initialSelectedDate;
       this.endDate = this.initialSelectedDate;
-      daysContainer?.classList.add('date-picker-long-select');
+      // daysContainer?.classList.add('date-picker-long-select');
     } else {
       //final values.
-      daysContainer?.classList.remove('date-picker-long-select');
+      // daysContainer?.classList.remove('date-picker-long-select');
       this.endDate = this.daysInMonth[index];
       if (Day.CompareDays(this.startDate!, this.endDate)! < 0) {
         this.startDate = this.endDate;
