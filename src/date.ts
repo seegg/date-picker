@@ -37,8 +37,8 @@ export const createDatesInMonth = (datePicker: DatePicker) => {
  */
 const createDay = (datePicker: DatePicker, index: number) => {
   let dayEle = document.createElement('div');
-  const date = datePicker.daysInMonth[index];
-  let touchInput = false;
+  dayEle.setAttribute('data-index', index.toString());
+  let isTouchInput = false;
   dayEle.classList.add('date-picker-day', 'date-picker-label');
 
 
@@ -49,18 +49,18 @@ const createDay = (datePicker: DatePicker, index: number) => {
   };
 
   dayEle.ontouchstart = (evt) => {
-    touchInput = true;
+    isTouchInput = true;
   }
 
   dayEle.ontouchend = () => {
     console.log('end');
     datePicker.isInSelectMode = false;
-    touchInput = false;
+    isTouchInput = false;
   }
 
   dayEle.ontouchcancel = () => {
     datePicker.isInSelectMode = false;
-    touchInput = false;
+    isTouchInput = false;
   }
 
   //for touch devices
@@ -71,9 +71,9 @@ const createDay = (datePicker: DatePicker, index: number) => {
     const { clientX, clientY } = evt.touches[0];
     let touchElement = document.elementFromPoint(clientX, clientY) as HTMLElement;
     if (lastElement === touchElement) return;
-    if (!isNaN(Number(touchElement?.innerHTML))) {
-      datePicker.setEndDateRange(Number(touchElement!.innerHTML));
-      lastElement = touchElement;
+    lastElement = touchElement;
+    if (touchElement.dataset.index) {
+      datePicker.setEndDateRange(Number(Number(touchElement.dataset.index)));
     }
   }
 
@@ -91,7 +91,7 @@ const createDay = (datePicker: DatePicker, index: number) => {
   };
   //only select dates on pointer move event if picker is in select mode.
   dayEle.onpointermove = (evt) => {
-    if (touchInput) return;
+    if (isTouchInput) return;
     evt.preventDefault();
     if (datePicker.isInSelectMode) {
       datePicker.setEndDateRange(index)
@@ -101,12 +101,14 @@ const createDay = (datePicker: DatePicker, index: number) => {
   dayEle.onpointerup = (evt) => {
     console.log('up', datePicker.isInSelectMode);
 
-    if (touchInput) return;
+    if (isTouchInput) return;
 
     evt.stopPropagation();
     datePicker.setEndDateRange(index)
     datePicker.setSelectMode(false);
   };
+
+  const date = datePicker.daysInMonth[index];
 
   if (date.month !== datePicker.month) dayEle.classList.add('not-current-month');
   dayEle.innerHTML = date.date.toString();
