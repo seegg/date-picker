@@ -12,9 +12,6 @@ export const createDatesInMonth = (datePicker: DatePicker) => {
   let daysContainer = document.createElement('div');
   daysContainer.id = 'days-container-' + datePicker.id;
   daysContainer.classList.add('date-picker-days-container');
-  // if (datePicker.isInMultiMonthSelectMode) {
-  //   daysContainer.classList.add('date-picker-long-select');
-  // }
 
   //The dates are group into weeks which is then group together
   //in the daysContainer.
@@ -41,6 +38,7 @@ export const createDatesInMonth = (datePicker: DatePicker) => {
 const createDay = (datePicker: DatePicker, index: number) => {
   let dayEle = document.createElement('div');
   const date = datePicker.daysInMonth[index];
+  let touchInput = false;
   dayEle.classList.add('date-picker-day', 'date-picker-label');
 
 
@@ -50,7 +48,37 @@ const createDay = (datePicker: DatePicker, index: number) => {
     toggleLongSelect(datePicker);
   };
 
+  dayEle.ontouchstart = (evt) => {
+    touchInput = true;
+  }
+
+  dayEle.ontouchend = () => {
+    console.log('end');
+    datePicker.isInSelectMode = false;
+    touchInput = false;
+  }
+
+  dayEle.ontouchcancel = () => {
+    datePicker.isInSelectMode = false;
+    touchInput = false;
+  }
+
+  //for touch devices
+  let lastElement: HTMLElement | null = null;
+  dayEle.ontouchmove = (evt) => {
+    evt.preventDefault();
+    if (datePicker.isInMultiMonthSelectMode) return;
+    const { clientX, clientY } = evt.touches[0];
+    let touchElement = document.elementFromPoint(clientX, clientY) as HTMLElement;
+    if (lastElement === touchElement) return;
+    if (!isNaN(Number(touchElement?.innerHTML))) {
+      datePicker.setEndDateRange(Number(touchElement!.innerHTML));
+      lastElement = touchElement;
+    }
+  }
+
   dayEle.onpointerdown = (evt) => {
+    console.log('down');
     if (evt.button === 2) return;
 
     if (datePicker.isInMultiMonthSelectMode) {
@@ -63,6 +91,7 @@ const createDay = (datePicker: DatePicker, index: number) => {
   };
   //only select dates on pointer move event if picker is in select mode.
   dayEle.onpointermove = (evt) => {
+    if (touchInput) return;
     evt.preventDefault();
     if (datePicker.isInSelectMode) {
       datePicker.setEndDateRange(index)
@@ -70,10 +99,15 @@ const createDay = (datePicker: DatePicker, index: number) => {
   };
 
   dayEle.onpointerup = (evt) => {
+    console.log('up', datePicker.isInSelectMode);
+
+    if (touchInput) return;
+
     evt.stopPropagation();
     datePicker.setEndDateRange(index)
     datePicker.setSelectMode(false);
   };
+
   if (date.month !== datePicker.month) dayEle.classList.add('not-current-month');
   dayEle.innerHTML = date.date.toString();
   return dayEle;
