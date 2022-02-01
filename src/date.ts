@@ -53,7 +53,6 @@ const createDay = (datePicker: DatePicker, index: number) => {
   }
 
   dayEle.ontouchend = () => {
-    console.log('end');
     datePicker.isInSelectMode = false;
     isTouchInput = false;
   }
@@ -78,7 +77,6 @@ const createDay = (datePicker: DatePicker, index: number) => {
   }
 
   dayEle.onpointerdown = (evt) => {
-    console.log('down');
     if (evt.button === 2) return;
 
     if (datePicker.isInMultiMonthSelectMode) {
@@ -99,7 +97,6 @@ const createDay = (datePicker: DatePicker, index: number) => {
   };
 
   dayEle.onpointerup = (evt) => {
-    console.log('up', datePicker.isInSelectMode);
 
     if (isTouchInput) return;
 
@@ -118,9 +115,7 @@ const createDay = (datePicker: DatePicker, index: number) => {
 const toggleLongSelect = (datePicker: DatePicker) => {
   if (datePicker.isInMultiMonthSelectMode) {
     datePicker.pickerView.container.classList.add('date-picker-long-select')
-    console.log('add');
   } else {
     datePicker.pickerView.container.classList.remove('date-picker-long-select');
-    console.log('remove');
   }
 }
