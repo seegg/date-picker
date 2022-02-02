@@ -13,14 +13,27 @@
 
 <body>
   <main id="app">
-
-    <h3>Date picker Demo</h3>
-
-    <div clas="date-input">
-      <label for="date-input">Date:</label>
-      <input type="text" name="date-input" id="date-input">
+    <div class="info">
+      <h3>Date Picker Demo</h3>
+      <ul>
+        <li>Click to select single date.</li>
+        <li>Click and drag to select multiple dates.</li>
+        <li>Right click(context menu) to select dates across multiple months/years.</li>
+        <li>Click on the month to select a specific month.</li>
+        <li>Click on the year to select a specific year.</li>
+      </ul>
     </div>
-    <div id="date-picker"></div>
+    <div class="pickers-container">
+      <div id="date-picker1" class="date-picker-n">
+        <div clas="date-input">
+          <label for="date-input">Date:</label>
+          <input type="text" name="date-input" id="date-input">
+        </div>
+      </div>
+      <div id="date-picker2" class="date-picker-n">
+        <div id="date-display-2"></div>
+      </div>
+    </div>
   </main>
 
   <style>
@@ -28,6 +41,34 @@
       padding-top: 50px;
       display: flex;
       width: 100%;
+      justify-content: center;
+      padding-top: 50px;
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      align-items: flex-start;
+      flex-wrap: wrap;
+    }
+
+    #date-display-2 {
+      height: 2rem;
+    }
+
+    .info>h3 {
+      text-align: center;
+    }
+
+    .info {
+      max-width: 400px;
+    }
+
+    .date-picker-n {
+      margin-bottom: 20px;
+    }
+
+    .pickers-container {
+      margin: 2rem;
+      display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;

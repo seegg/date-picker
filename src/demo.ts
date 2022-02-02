@@ -11,24 +11,24 @@ let picker = new DatePicker(new Date(9999, 2, 1), (start, end) => {
   }
 });
 
-const secondDisplay = document.createElement('div');
-// secondDisplay.style.width = '200px';
-secondDisplay.style.height = '50px';
 
 let picker2 = new DatePicker(new Date(), (start, end) => {
-  if (start && end) {
-    secondDisplay.innerHTML = `start: ${formatDate(start)} end: ${formatDate(end)}`;
+  let input = document.getElementById('date-display-2') as HTMLDivElement;
+  if (start === null || end === null) {
+    input.innerHTML = '';
+  } else if (start.getTime() === end.getTime()) {
+    input.innerHTML = formatDate(start);
   } else {
-    secondDisplay.innerHTML = 'no dates selected';
+    input.innerHTML = formatDate(start) + ' to ' + formatDate(end);
   }
 })
 
 const formatDate = (date: Date | null): string => {
   return date ? `${(date.getDate()).toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}` : '';
 }
-const container = document.getElementById('date-picker');
-container?.appendChild(picker.getLayout());
-container?.appendChild(document.createElement('br'));
-container?.appendChild(picker2.getLayout());
-container?.appendChild(document.createElement('br'));
-container?.appendChild(secondDisplay);
+const container1 = document.getElementById('date-picker1');
+container1?.appendChild(picker.getLayout());
+const container2 = document.getElementById('date-picker2');
+container2?.appendChild(picker2.getLayout());
+// container?.appendChild(picker2.getLayout());
+// container?.appendChild(secondDisplay);
