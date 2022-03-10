@@ -58,7 +58,6 @@ const createYearSelect = (datepicker: DatePicker) => {
     }
   });
 
-
   //check if the blur event is from seleting another element
   //inside the parent element do nothing if that's the case.
   yearInput.onblur = (evt) => {
@@ -128,37 +127,45 @@ const scrollToSelectedYear = (yearSelect: HTMLDivElement, year: number | null) =
  * @returns 
  */
 const createYearSelectItems = (datePicker: DatePicker, year: number, max: number = maxYearDefault,
-  min: number = minYearDefault, numberOfItems: number = 10) => {
+  min: number = minYearDefault, numberOfItems: number = 20) => {
 
   let yearItemContainer = document.createElement('div');
   let itemCount = max - min >= numberOfItems ? numberOfItems : max - min;
   yearItemContainer.classList.add('date-picker-year-select-item-container');
 
-  //check the min and min values when adding and subtracting from half of the item count.
-  let currentYear = year - Math.floor(itemCount / 2) >= min ? year - Math.floor(itemCount / 2) : min;
-  currentYear = year + Math.ceil(itemCount / 2) <= max ? year : max - itemCount;
+  //starting year on the selection menu.
+  let minYear = year - itemCount >= min ? year - itemCount : min;
 
-  for (let i = 0; i <= itemCount; i++) {
-    let yearItem = document.createElement('div');
-    yearItem.tabIndex = -(i + 100);
+  for (let i = 0; i <= itemCount * 2; i++) {
 
-    //forms a closure for the setYear callback.
-    let selectYear = currentYear + i;
-    yearItem.innerHTML = selectYear.toString();
+    let selectYear = minYear + i;
+    if (selectYear > max || selectYear > year + itemCount) break;
 
     //highlight the item if selectYear is the same as the date picker's current year.
     const selectedClass = selectYear === year ?
       'date-picker-year-select-selected' : 'date-picker-year-select-item';
 
-    yearItem.classList.add('date-picker-year-select-item', selectedClass);
-
-    yearItem.onclick = () => {
-      datePicker.setYear(selectYear);
-    }
+    let yearItem = createSelectItem(selectYear, datePicker, 'date-picker-year-select-item', selectedClass);
     yearItemContainer.appendChild(yearItem);
   }
 
   return yearItemContainer;
+}
+
+/**
+ * Create a year select item.
+ * @param selectYear year date
+ * @param datePicker DatePicker object
+ * @param classes css classes for the year select item
+ */
+const createSelectItem = (selectYear: number, datePicker: DatePicker, ...classes: string[]) => {
+  const yearSelectItem = document.createElement('div');
+  yearSelectItem.tabIndex = -1;
+  const yearText = document.createTextNode(selectYear.toString());
+  yearSelectItem.appendChild(yearText);
+  yearSelectItem.classList.add(...classes);
+  yearSelectItem.onclick = () => { datePicker.setYear(selectYear) };
+  return yearSelectItem;
 }
 
 /**
