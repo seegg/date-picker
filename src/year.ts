@@ -35,7 +35,7 @@ export const createYear = (datePicker: DatePicker) => {
 const createYearSelect = (datepicker: DatePicker) => {
   let yearSelect = document.createElement('div');
   let yearInput = createYearSelectInput(datepicker.year);
-  let yearItems = createYearSelectItems(datepicker, datepicker.year);
+  let yearSelectItems = createYearSelectItems(datepicker, datepicker.year);
   yearSelect.classList.add('date-picker-year-select');
   yearInput.classList.add('date-picker-year-select-input');
   yearSelect.tabIndex = -1;
@@ -78,7 +78,7 @@ const createYearSelect = (datepicker: DatePicker) => {
   }
 
   yearSelect.appendChild(yearInput);
-  yearSelect.appendChild(yearItems);
+  yearSelect.appendChild(yearSelectItems);
   return yearSelect;
 }
 
@@ -136,18 +136,45 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
   //starting year on the selection menu.
   let minYear = year - itemCount >= min ? year - itemCount : min;
 
-  for (let i = 0; i <= itemCount * 2; i++) {
+  //seperate create items into own function to make it easier to replace.
+  //for inifinite scrolling effect.
+  const createItems = () => {
+    const items: HTMLDivElement[] = [];
+    for (let i = 0; i <= itemCount * 2; i++) {
 
-    let selectYear = minYear + i;
-    if (selectYear > max || selectYear > year + itemCount) break;
+      let selectYear = minYear + i;
+      if (selectYear > max || selectYear > year + itemCount) break;
+      if (minYear < min) break;
 
-    //highlight the item if selectYear is the same as the date picker's current year.
-    const selectedClass = selectYear === year ?
-      'date-picker-year-select-selected' : 'date-picker-year-select-item';
+      //highlight the item if selectYear is the same as the date picker's current year.
+      const selectedClass = selectYear === year ?
+        'date-picker-year-select-selected' : 'date-picker-year-select-item';
 
-    let yearItem = createSelectItem(selectYear, datePicker, 'date-picker-year-select-item', selectedClass);
-    yearItemContainer.appendChild(yearItem);
+      items.push(createSelectItem(selectYear, datePicker, 'date-picker-year-select-item', selectedClass));
+    }
+    return items;
   }
+
+  yearItemContainer.replaceChildren(...createItems());
+
+  //inifinite scrolling for year selection.
+  yearItemContainer.addEventListener('scroll', () => {
+    const { scrollTop, scrollHeight, clientHeight } = yearItemContainer;
+    if (scrollTop === 0) {
+      console.log('top');
+      let temp = minYear - numberOfItems >= min ? minYear - numberOfItems : min;
+      if (temp === minYear) return;
+      const yearDifference = minYear - temp;
+      minYear = temp;
+      yearItemContainer.prepend(...createItems());
+      const { height } = (yearItemContainer.firstChild as HTMLDivElement).getBoundingClientRect();
+      yearItemContainer.scrollTo(0, height * yearDifference);
+    }
+
+    if (scrollHeight - scrollTop === clientHeight) {
+      console.log('bottom');
+    }
+  })
 
   return yearItemContainer;
 }
