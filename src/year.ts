@@ -143,7 +143,7 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
     for (let i = 0; i <= itemCount * 2; i++) {
 
       let selectYear = minYear + i;
-      if (selectYear > max || selectYear > year + itemCount) break;
+      if (selectYear > max) break;
       if (minYear < min) break;
 
       //highlight the item if selectYear is the same as the date picker's current year.
@@ -160,19 +160,28 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
   //inifinite scrolling for year selection.
   yearItemContainer.addEventListener('scroll', () => {
     const { scrollTop, scrollHeight, clientHeight } = yearItemContainer;
+    //top scrolling, change min year by subtracting item count, 
+    //create new select items and prepend it to container.
     if (scrollTop === 0) {
-      console.log('top');
-      let temp = minYear - numberOfItems >= min ? minYear - numberOfItems : min;
-      if (temp === minYear) return;
+      let temp = minYear - numberOfItems;
+      if (temp <= min) return;
       const yearDifference = minYear - temp;
       minYear = temp;
-      yearItemContainer.prepend(...createItems());
+      yearItemContainer.replaceChildren(...createItems());
       const { height } = (yearItemContainer.firstChild as HTMLDivElement).getBoundingClientRect();
       yearItemContainer.scrollTo(0, height * yearDifference);
     }
 
+    //bottom scrolling, same as top scrolling but adding to min year intead and append.
     if (scrollHeight - scrollTop === clientHeight) {
-      console.log('bottom');
+      let temp = minYear + numberOfItems;
+      if (temp >= max) return;
+      const yearDifference = temp - minYear;
+      console.log(temp, minYear, yearDifference);
+      minYear = temp;
+      yearItemContainer.replaceChildren(...createItems());
+      const { height } = (yearItemContainer.firstChild as HTMLDivElement).getBoundingClientRect();
+      yearItemContainer.scrollTo(0, scrollHeight - clientHeight - (height * yearDifference));
     }
   })
 
