@@ -20,6 +20,7 @@ type DateCallbackFn = (startDate: Date | null, endDate: Date | null, isDone: boo
 
 export default class DatePicker {
   id: number;
+  isSingleSelect: boolean;
   fullDate: Date;
   daysInMonth: IDay[] = [];
   initialSelectedDate: IDay | null = null;
@@ -35,9 +36,10 @@ export default class DatePicker {
    * @param date Date object
    * @param callback Callback to handle when a date range has been selected, has access to startDate and endDate properties.
    */
-  constructor(date: Date, callback: DateCallbackFn, config?: IPickerConfig | null) {
+  constructor(date: Date, callback: DateCallbackFn, singleSelect: boolean = false, config?: IPickerConfig | null) {
     this.id = DatePicker.baseID;
     DatePicker.baseID++;
+    this.isSingleSelect = singleSelect;
     this.fullDate = date;
     this.sendDateCallback = callback;
     this.daysInMonth = DatePicker.GetDaysInMonth(this.fullDate.getFullYear(), this.fullDate.getMonth());
@@ -80,6 +82,10 @@ export default class DatePicker {
 
   get year() {
     return this.fullDate.getFullYear();
+  }
+
+  setSingleSelect(singleSelect: boolean) {
+    this.isSingleSelect = singleSelect;
   }
 
   deSelect() {
@@ -181,6 +187,13 @@ export default class DatePicker {
       this.startDate = this.initialSelectedDate;
       this.endDate = this.initialSelectedDate;
     }
+
+    if (this.isSingleSelect) {
+      this.setEndDateRange(index);
+      this.isInSelectMode = false;
+    }
+
+
     this.highlightSelectedDateRange();
   }
 
@@ -201,7 +214,6 @@ export default class DatePicker {
     } else {
       this.startDate = this.initialSelectedDate;
     }
-
     this.highlightSelectedDateRange();
   }
 
@@ -210,7 +222,7 @@ export default class DatePicker {
    * @param index Index of the Day object relating to a certain date of the month
    */
   setMultiMonthDateRange(index: number) {
-
+    if (this.isSingleSelect) return;
     const daysContainer = document.getElementById('days-container-' + this.id);
     //Select initial values if isInMultiMonthSelectMode is false initially.
     if (!this.isInMultiMonthSelectMode) {

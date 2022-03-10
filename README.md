@@ -26,6 +26,13 @@ Get the layout, returns the HTMLElement containing the date picker.
 datePicker.getLayout()
 ```
 
+Only allow selecting single dates by passing true to third param.
+Or calling setSingleSelect and pass true as value;
+```
+new DatePicker(Date, callback, true)
+datePicker.setSingleSelect(true)
+```
+
 Reset the date picker to the current month and year by calling reset, or reset it to a specific date by passing a Date object to the params.
 ```
 datePicker.reset()
