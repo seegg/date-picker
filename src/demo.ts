@@ -25,6 +25,7 @@ let picker2 = new DatePicker(new Date(), (start, end, isDone) => {
     container2?.classList.add('hide');
   }
 })
+picker2.setSingleSelect(true);
 
 const formatDate = (date: Date | null): string => {
   return date ? `${(date.getDate()).toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}` : '';
