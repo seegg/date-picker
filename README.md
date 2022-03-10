@@ -4,7 +4,7 @@
 
 ### create a new Date Picker:
 
-The constructor accepts a Date object and a callback function as arguments. The start date and the end date and whether it's done selecting passed to the callback as params. 
+The constructor accepts a Date object and a callback function as arguments. The start date and the end date and whether it's done selecting is passed to the callback as params. 
 
 ```
 const datePicker = new DatePicker(Date, Callback)
