@@ -21,7 +21,7 @@ let picker2 = new DatePicker(new Date(), (start, end, isDone) => {
   } else {
     input.innerHTML = formatDate(start) + ' to ' + formatDate(end);
   }
-  if (isDone) {
+  if (isDone && start !== null) {
     container2?.classList.add('hide');
   }
 })
