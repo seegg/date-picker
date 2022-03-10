@@ -16,7 +16,7 @@ interface IPickerView {
   layout: HTMLDivElement,
 }
 
-type DateCallbackFn = (startDate: Date | null, endDate: Date | null) => void;
+type DateCallbackFn = (startDate: Date | null, endDate: Date | null, isDone: boolean) => void;
 
 export default class DatePicker {
   id: number;
@@ -142,7 +142,7 @@ export default class DatePicker {
     if (this.isInMultiMonthSelectMode) return;
     //Is not in select mode and start date and end date is not null.
     if (!this.isInSelectMode && this.startDate && this.endDate) {
-      this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate());
+      this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate(), !this.isInMultiMonthSelectMode);
       this.isSameDateValues = true;
     }
   }
@@ -216,7 +216,7 @@ export default class DatePicker {
     }
 
     //always trigger callback to send dates.
-    this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate());
+    this.sendDateCallback(this.startDate!.toDate(), this.endDate!.toDate(), !this.isInMultiMonthSelectMode);
     this.highlightSelectedDateRange();
     this.isSameDateValues = true;
   }
@@ -228,7 +228,7 @@ export default class DatePicker {
     this.isInSelectMode = false;
     this.startDate = null;
     this.endDate = null;
-    this.sendDateCallback(this.startDate, this.endDate);
+    this.sendDateCallback(this.startDate, this.endDate, !this.isInMultiMonthSelectMode);
   }
 
   /**

@@ -177,7 +177,6 @@ const createYearSelectItems = (datePicker: DatePicker, year: number, max: number
       let temp = minYear + numberOfItems;
       if (temp >= max) return;
       const yearDifference = temp - minYear;
-      console.log(temp, minYear, yearDifference);
       minYear = temp;
       yearItemContainer.replaceChildren(...createItems());
       const { height } = (yearItemContainer.firstChild as HTMLDivElement).getBoundingClientRect();

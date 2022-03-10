@@ -32,13 +32,21 @@
           <input type="text" name="date-input" id="date-input">
         </div>
       </div>
+
+      <div id="date-display-2"></div>
       <div id="date-picker2" class="date-picker-n">
-        <div id="date-display-2"></div>
+
       </div>
+
+      <button onclick="toggleContainer()">Select Date</button>
     </div>
   </main>
 
   <style>
+    .hide {
+      display: none;
+    }
+
     #app {
       padding-top: 50px;
       display: flex;
@@ -54,8 +62,13 @@
 
     #date-display-2 {
       height: 2rem;
+      width: 100%;
       background-color: aliceblue;
       margin: 1rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: nowrap;
     }
 
     .info>h3 {
@@ -83,6 +96,11 @@
       display: flex;
     }
   </style>
+  <script>
+    const toggleContainer = () => {
+      document.getElementById('date-picker2').classList.toggle('hide');
+    }
+  </script>
 </body>
 
 </html>

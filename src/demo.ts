@@ -12,7 +12,7 @@ let picker = new DatePicker(new Date(9999, 2, 1), (start, end) => {
 });
 
 
-let picker2 = new DatePicker(new Date(), (start, end) => {
+let picker2 = new DatePicker(new Date(), (start, end, isDone) => {
   let input = document.getElementById('date-display-2') as HTMLDivElement;
   if (start === null || end === null) {
     input.innerHTML = '';
@@ -20,6 +20,9 @@ let picker2 = new DatePicker(new Date(), (start, end) => {
     input.innerHTML = formatDate(start);
   } else {
     input.innerHTML = formatDate(start) + ' to ' + formatDate(end);
+  }
+  if (isDone) {
+    container2?.classList.add('hide');
   }
 })
 
