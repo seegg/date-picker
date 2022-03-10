@@ -14,7 +14,7 @@
 <body>
   <main id="app">
     <div class="info">
-      <h3>Date Picker Demo</h3>
+      <h3></h3>
       <ul>
         <li>Click to select single date.</li>
         <li>Click and drag to select multiple dates.</li>
@@ -26,7 +26,6 @@
       </ul>
     </div>
     <div class="pickers-container">
-      <p>Multi Select</p>
       <div id="date-picker1" class="date-picker-n">
         <div clas="date-input">
           <label for="date-input">Date:</label>
@@ -34,15 +33,25 @@
         </div>
       </div>
 
-      <p>Single Select</p>
       <div id="date-display-2"></div>
       <div id="date-picker2" class="date-picker-n hide"></div>
 
       <button onclick="toggleContainer()">Select Date</button>
+      <p>Single select only</p>
     </div>
   </main>
 
   <style>
+    :root {
+      background-color: darkgrey;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
     .hide {
       display: none;
     }
@@ -50,11 +59,7 @@
     #app {
       padding-top: 50px;
       display: flex;
-      width: 100%;
-      justify-content: center;
-      padding-top: 50px;
-      display: flex;
-      width: 100%;
+      width: fit-content;
       justify-content: center;
       align-items: flex-start;
       flex-wrap: wrap;
@@ -63,7 +68,7 @@
     #date-display-2 {
       height: 2rem;
       width: 100%;
-      background-color: aliceblue;
+      background-color: rgb(197, 224, 248);
       margin: 1rem;
       display: flex;
       justify-content: center;
