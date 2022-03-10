@@ -26,6 +26,17 @@ Get the HTML layout, returns a HTMLDivElement representing the date picker.
 datePicker.getLayout()
 ```
 
+Reset the date picker to the current month and year by calling reset, or reset it to a specific date by passing a Date object to the params.
+```
+datePicker.reset()
+datePicker.reset(newDate)
+```
+
+Use deSelect forget start and end date on the date picker.
+```
+datePicker.deSelect()
+```
+
 #### Picking a date
 
 Click on a date on the picker to select it.

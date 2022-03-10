@@ -82,7 +82,7 @@ export default class DatePicker {
     return this.fullDate.getFullYear();
   }
 
-  unSelect() {
+  deSelect() {
     this.startDate = null;
     this.endDate = null;
     this.isInMultiMonthSelectMode = false;
@@ -90,9 +90,9 @@ export default class DatePicker {
     this.highlightSelectedDateRange();
   }
 
-  reset() {
-    this.unSelect();
-    this.fullDate = new Date();
+  reset(date: Date = new Date()) {
+    this.deSelect();
+    this.fullDate = date;
     this.daysInMonth = DatePicker.GetDaysInMonth(this.year, this.month);
     const view = createDatePickerLayout(this);
     this.updateView(view);

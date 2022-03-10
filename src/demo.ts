@@ -23,7 +23,6 @@ let picker2 = new DatePicker(new Date(), (start, end, isDone) => {
   }
   if (isDone) {
     container2?.classList.add('hide');
-    picker2.reset();
   }
 })
 
