@@ -81,6 +81,23 @@ export default class DatePicker {
   get year() {
     return this.fullDate.getFullYear();
   }
+
+  unSelect() {
+    this.startDate = null;
+    this.endDate = null;
+    this.isInMultiMonthSelectMode = false;
+    this.isInSelectMode = false;
+    this.highlightSelectedDateRange();
+  }
+
+  reset() {
+    this.unSelect();
+    this.fullDate = new Date();
+    this.daysInMonth = DatePicker.GetDaysInMonth(this.year, this.month);
+    const view = createDatePickerLayout(this);
+    this.updateView(view);
+  }
+
   /**
    * Set the year value for the Date picker, redraws the layout.
    * @param year 

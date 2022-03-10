@@ -35,7 +35,8 @@ Click and drag across multiple boxes to select a range of dates.
 Click on the month to select a specific month.
 
 Click on the year to select a specific year.
+Scroll to the desired year or just type it in on the input.
 
 To make a selection across multiple months, use context menu to select the first date and then use either normal click or context menu to select the second date.
 
-reset selection by clicking on one of the selected dates.
+Reset selection by clicking on one of the highlighted selected dates.
