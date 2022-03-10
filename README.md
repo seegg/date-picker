@@ -20,7 +20,7 @@ datePick.setYear(2002)
 datePicker.setDate(new Date())
 ```
 
-Get the HTML layout, returns a HTMLDivElement representing the date picker.
+Get the layout, returns the HTMLElement containing the date picker.
 
 ```
 datePicker.getLayout()
